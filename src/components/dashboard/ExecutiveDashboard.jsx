@@ -21,7 +21,9 @@ import {
   IndianRupee,
   Eye,
   Trophy,
-  Download
+  Download,
+  BookOpenCheck,
+  Bus
 } from 'lucide-react';
 
 export default function ExecutiveDashboard() {
@@ -232,19 +234,108 @@ export default function ExecutiveDashboard() {
   // Teacher View
   if (currentRole === 'teacher') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-        <div>
-          <h1 style={{ fontSize: '1.85rem', fontWeight: 800 }}>Educator Academic Workspace</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-            Welcome back, {activeTeacher.name} ({activeTeacher.department}). Here is your teaching schedule and class overview.
-          </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Header with persona & live date */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+              <span className="badge badge-primary" style={{ fontWeight: 800 }}>Faculty Console</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Class 10-A Mentor & CS Dept</span>
+            </div>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+              Educator Academic Workspace
+            </h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: '0.15rem' }}>
+              Welcome back, {activeTeacher.name} ({activeTeacher.department}). Here is your teaching schedule and class overview.
+            </p>
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+        {/* Mobile Quick Action Chips */}
+        <div className="mobile-quick-chips">
+          <button className="mobile-chip-btn highlight" onClick={() => setActiveTab('attendance')}>
+            <UserCheck size={14} />
+            <span>Mark Attendance</span>
+          </button>
+          <button className="mobile-chip-btn warning" onClick={() => setActiveTab('assignments')}>
+            <BookOpenCheck size={14} />
+            <span>8 Tests to Grade</span>
+          </button>
+          <button className="mobile-chip-btn" onClick={() => setActiveTab('timetable')}>
+            <Clock size={14} />
+            <span>Today's Periods</span>
+          </button>
+          <button className="mobile-chip-btn" onClick={() => setActiveTab('exams')}>
+            <Award size={14} />
+            <span>Pre-Board Marks</span>
+          </button>
+          <button className="mobile-chip-btn" onClick={() => setActiveTab('complaints')}>
+            <MessageSquareWarning size={14} />
+            <span>Staff Grievance</span>
+          </button>
+        </div>
+
+        {/* Live Period Banner (App-like hero card) */}
+        <div 
+          className="glass-panel"
+          style={{
+            padding: '1.15rem 1.35rem',
+            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(14, 165, 233, 0.06) 100%)',
+            border: '1.5px solid rgba(79, 70, 229, 0.25)',
+            borderRadius: 'var(--radius-md)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <div style={{
+              width: '42px',
+              height: '42px',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, var(--primary) 0%, #3730a3 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              boxShadow: '0 2px 8px rgba(79, 70, 229, 0.25)',
+              flexShrink: 0
+            }}>
+              <Clock size={20} />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.2rem' }}>
+                <span className="badge badge-primary" style={{ fontSize: '0.68rem', fontWeight: 800 }}>Next Up: Period 2</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>09:55 AM – 10:40 AM</span>
+              </div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                Computer Science & Python Algorithms
+              </h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                Assigned: <strong>Class 10-A</strong> • Location: <strong>Lab 3 / Room 204</strong>
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }} onClick={() => setActiveTab('attendance')}>
+              <UserCheck size={15} />
+              <span>Mark Roll Call</span>
+            </button>
+            <button className="btn btn-secondary" style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }} onClick={() => setActiveTab('assignments')}>
+              <BookOpen size={15} />
+              <span>Coursework Desk</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="mobile-stats-grid">
           <StatsCard title="Assigned Classes" value="2 Sections" subtext="Class 10-A & Class 12-A" icon={Users} color="primary" />
           <StatsCard title="Today's Periods" value="4 Lectures" subtext="Next: Computer Science @ 09:55 AM" icon={Clock} color="secondary" />
           <StatsCard title="Class Attendance" value="96.5%" subtext="Recorded for today" icon={UserCheck} color="success" />
-          <StatsCard title="Grading Queue" value="1 Exam" subtext="CBSE Pre-Board Evaluation" icon={Award} color="purple" />
+          <StatsCard title="Grading Queue" value="8 Pending" subtext="CBSE Pre-Board Evaluation" icon={Award} color="warning" />
         </div>
 
         {/* Quick Grievance Link */}
@@ -288,15 +379,99 @@ export default function ExecutiveDashboard() {
   // Student View
   if (currentRole === 'student') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-        <div>
-          <h1 style={{ fontSize: '1.85rem', fontWeight: 800 }}>Student Learning Dashboard</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.2rem' }}>
-            Namaste {currentStudent.name}! Here is your current academic performance, attendance dossier, and schedule.
-          </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+              <span className="badge badge-success" style={{ fontWeight: 800 }}>Student Portal</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Roll #1001 • Class 10-A</span>
+            </div>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+              Student Learning Dashboard
+            </h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: '0.15rem' }}>
+              Namaste {currentStudent.name}! Here is your current academic performance, attendance dossier, and schedule.
+            </p>
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+        {/* Mobile Quick Action Chips */}
+        <div className="mobile-quick-chips">
+          <button className="mobile-chip-btn highlight" onClick={() => setActiveTab('assignments')}>
+            <Sparkles size={14} />
+            <span>Attempt MCQ Quiz</span>
+          </button>
+          <button className="mobile-chip-btn" onClick={() => setActiveTab('exams')}>
+            <Award size={14} />
+            <span>CBSE Marksheet</span>
+          </button>
+          <button className="mobile-chip-btn" onClick={() => setActiveTab('library')}>
+            <BookOpen size={14} />
+            <span>My Books ({studentLoans.length})</span>
+          </button>
+          <button className="mobile-chip-btn" onClick={() => setActiveTab('transport')}>
+            <Bus size={14} />
+            <span>Bus Route #4</span>
+          </button>
+          <button className="mobile-chip-btn" onClick={() => setActiveTab('timetable')}>
+            <Clock size={14} />
+            <span>Weekly Timetable</span>
+          </button>
+        </div>
+
+        {/* Student Academic Distinction Banner */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            padding: '1.15rem 1.35rem', 
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(79, 70, 229, 0.06) 100%)', 
+            border: '1.5px solid rgba(16, 185, 129, 0.3)',
+            borderRadius: 'var(--radius-md)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <div style={{ 
+              width: '42px', 
+              height: '42px', 
+              borderRadius: '12px', 
+              background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              color: '#ffffff',
+              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)',
+              flexShrink: 0
+            }}>
+              <Trophy size={20} color="#fef08a" />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.2rem' }}>
+                <span className="badge badge-success" style={{ fontWeight: 800 }}>Term 2 Aggregate: 94.8%</span>
+                <span className="badge badge-primary" style={{ fontWeight: 800 }}>Class Rank #2</span>
+              </div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                Passed with Academic Distinction
+              </h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                Total 474/500 Marks • GPA: 3.94 / 4.00 • Attendance: 96.5% (Exemplary)
+              </p>
+            </div>
+          </div>
+
+          <button className="btn btn-primary" style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }} onClick={() => setActiveTab('exams')}>
+            <Award size={15} />
+            <span>View Full Marksheet</span>
+          </button>
+        </div>
+
+        {/* Responsive Stats Grid */}
+        <div className="mobile-stats-grid">
           <StatsCard title="CBSE Aggregate %" value={`${currentStudent.percentage || 94.8}%`} subtext="Overall Term Aggregate" icon={Award} trend="Rank #2" color="primary" />
           <StatsCard title="Attendance Rate" value={`${currentStudent.attendanceRate || 96.5}%`} subtext="Above CBSE 75% requirement" icon={UserCheck} trend="+1.5%" color="success" />
           <StatsCard title="Current Class" value={currentStudent.className || 'Class 10-A'} subtext={`Roll No: ${currentStudent.rollNo || '1001'}`} icon={Users} color="secondary" />
@@ -698,15 +873,52 @@ export default function ExecutiveDashboard() {
 
   // Parent View
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      <div>
-        <h1 style={{ fontSize: '1.85rem', fontWeight: 800 }}>Guardian & Parent Portal</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.2rem' }}>
-          Monitoring academic progress, homework completion, school bus safety, and fee billing for: <strong>{currentStudent.name}</strong> ({currentStudent.className || 'Class 10-A'}).
-        </p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+            <span className="badge badge-primary" style={{ fontWeight: 800 }}>Guardian & Parent Portal</span>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Real-Time Child Safety & Academics</span>
+          </div>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+            {currentStudent.name}'s Family Desk
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: '0.15rem' }}>
+            Supervising academic progress, daily bus transit, homework submissions, and fee clearances for: <strong>{currentStudent.name}</strong> ({currentStudent.className || 'Class 10-A'}).
+          </p>
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+      {/* Mobile Quick Action Chips */}
+      <div className="mobile-quick-chips">
+        <button 
+          className={`mobile-chip-btn ${studentNotGivenTests.length > 0 ? 'danger' : 'highlight'}`} 
+          onClick={() => setActiveTab('assignments')}
+        >
+          <AlertCircle size={14} />
+          <span>{studentNotGivenTests.length > 0 ? `${studentNotGivenTests.length} Pending Test` : 'Coursework Hub'}</span>
+        </button>
+        <button className="mobile-chip-btn" onClick={() => setActiveTab('exams')}>
+          <Award size={14} />
+          <span>Term 2 Marksheet</span>
+        </button>
+        <button className="mobile-chip-btn" onClick={() => setActiveTab('fees')}>
+          <CreditCard size={14} />
+          <span>Fee Ledger</span>
+        </button>
+        <button className="mobile-chip-btn" onClick={() => setActiveTab('transport')}>
+          <Bus size={14} />
+          <span>Track School Bus</span>
+        </button>
+        <button className="mobile-chip-btn" onClick={() => setActiveTab('complaints')}>
+          <MessageSquareWarning size={14} />
+          <span>Lodge Grievance</span>
+        </button>
+      </div>
+
+      {/* Responsive Stats Grid */}
+      <div className="mobile-stats-grid">
         <StatsCard title="Morning Check-In" value="Present" subtext="Bus Arrival at 07:45 AM" icon={CheckCircle2} color="success" />
         <StatsCard title="Term Aggregate" value={`${currentStudent.percentage || 94.8}%`} subtext="Class Rank #2" icon={Award} color="primary" />
         <StatsCard 

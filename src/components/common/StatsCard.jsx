@@ -32,9 +32,9 @@ export default function StatsCard({ title, value, subtext, icon: Icon, trend, co
 
   return (
     <div 
-      className="glass-panel glass-panel-hover"
+      className="glass-panel glass-panel-hover stats-card-container"
       style={{
-        padding: '1.25rem 1.4rem',
+        padding: '1.15rem 1.25rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -43,23 +43,23 @@ export default function StatsCard({ title, value, subtext, icon: Icon, trend, co
         borderLeft: `4px solid ${current.text}`
       }}
     >
-      <div style={{ zIndex: 1 }}>
-        <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.35rem' }}>
+      <div style={{ zIndex: 1, minWidth: 0 }}>
+        <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {title}
         </p>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem' }}>
-          <h3 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <h3 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
             {value}
           </h3>
           {trend && (
             <span style={{ 
-              fontSize: '0.78rem', 
+              fontSize: '0.72rem', 
               fontWeight: 700, 
               color: trend.startsWith('+') ? 'var(--success)' : 'var(--danger)',
               display: 'inline-flex',
               alignItems: 'center',
               background: trend.startsWith('+') ? 'var(--success-bg)' : 'var(--danger-bg)',
-              padding: '0.15rem 0.45rem',
+              padding: '0.12rem 0.4rem',
               borderRadius: 'var(--radius-full)'
             }}>
               {trend}
@@ -67,26 +67,30 @@ export default function StatsCard({ title, value, subtext, icon: Icon, trend, co
           )}
         </div>
         {subtext && (
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+          <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {subtext}
           </p>
         )}
       </div>
 
       {Icon && (
-        <div style={{
-          width: '52px',
-          height: '52px',
-          borderRadius: 'var(--radius-md)',
-          background: current.bgIcon,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: current.text,
-          border: `1px solid ${current.border}`,
-          boxShadow: `0 0 20px ${current.glow}`
-        }}>
-          <Icon size={26} strokeWidth={2.2} />
+        <div 
+          className="stats-card-icon"
+          style={{
+            width: '46px',
+            height: '46px',
+            borderRadius: 'var(--radius-md)',
+            background: current.bgIcon,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: current.text,
+            border: `1px solid ${current.border}`,
+            boxShadow: `0 0 16px ${current.glow}`,
+            flexShrink: 0
+          }}
+        >
+          <Icon size={22} strokeWidth={2.2} />
         </div>
       )}
     </div>

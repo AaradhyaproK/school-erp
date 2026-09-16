@@ -2,6 +2,7 @@ import React from 'react';
 import { ERPProvider, useERP } from './context/ERPContext';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
+import MobileBottomNav from './components/layout/MobileBottomNav';
 import ExecutiveDashboard from './components/dashboard/ExecutiveDashboard';
 import StudentDirectory from './components/students/StudentDirectory';
 import AttendanceTracker from './components/attendance/AttendanceTracker';
@@ -131,6 +132,8 @@ function ERPContent() {
           {renderActiveTab()}
         </main>
       </div>
+
+      <MobileBottomNav />
     </div>
   );
 }
