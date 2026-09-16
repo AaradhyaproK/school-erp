@@ -89,7 +89,7 @@ export function ERPProvider({ children }) {
       ...studentData,
       id: `std-${Date.now()}`,
       admissionNo: `ADM-2026-${Math.floor(100 + Math.random() * 900)}`,
-      gpa: 4.0,
+      gpa: 10.0,
       attendanceRate: 100,
       feeStatus: 'Unpaid',
       status: 'Active',
@@ -316,7 +316,7 @@ export function ERPProvider({ children }) {
       const totalMarks = scores.reduce((sum, s) => sum + s.marks, 0);
       const maxTotal = scores.length * 100;
       const percentage = parseFloat(((totalMarks / (maxTotal || 1)) * 100).toFixed(1));
-      const gpa = parseFloat(Math.min(4.0, (percentage / 25)).toFixed(2));
+      const gpa = parseFloat(Math.min(10.0, (percentage / 10)).toFixed(2));
 
       return {
         ...record,
@@ -367,10 +367,12 @@ export function ERPProvider({ children }) {
 
 
 
-  const markAttendance = async (date, classId, records) => {
+  const markAttendance = async (date, classId, records, silent = false) => {
     const updated = await DataService.saveAttendance(date, classId, records, attendance);
     setAttendance(updated);
-    showToast(`Attendance recorded for ${classId.toUpperCase()} on ${date}!`);
+    if (!silent) {
+      showToast(`Attendance recorded for ${classId.toUpperCase()} on ${date}!`);
+    }
   };
 
   const payFeeInvoice = async (invoiceNo, paymentDetails) => {

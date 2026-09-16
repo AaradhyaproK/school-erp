@@ -189,6 +189,14 @@ input, select, textarea {
   display: block;
 }
 
+.desktop-attendance-table {
+  display: block;
+}
+
+.mobile-attendance-cards {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     display: none !important;
@@ -196,6 +204,14 @@ input, select, textarea {
 
   .desktop-role-switcher {
     display: none !important;
+  }
+
+  .desktop-attendance-table {
+    display: none !important;
+  }
+
+  .mobile-attendance-cards {
+    display: block !important;
   }
 
   .mobile-app-header-left,

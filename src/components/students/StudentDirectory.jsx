@@ -162,7 +162,7 @@ export default function StudentDirectory() {
               <th>Student Dossier</th>
               <th>Class / Section</th>
               <th>Guardian / Emergency</th>
-              <th>Current GPA</th>
+              <th>CGPA (10.0)</th>
               <th>Attendance</th>
               <th>Fee Ledger</th>
               <th style={{ textAlign: 'right' }}>Actions</th>
@@ -201,8 +201,8 @@ export default function StudentDirectory() {
                     <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>{student.parentPhone}</div>
                   </td>
                   <td>
-                    <span style={{ fontWeight: 800, fontSize: '0.95rem', color: student.gpa >= 3.8 ? 'var(--primary-light)' : 'var(--text-primary)' }}>
-                      {student.gpa.toFixed(2)}
+                    <span style={{ fontWeight: 800, fontSize: '0.95rem', color: student.gpa >= 9.0 ? 'var(--primary-light)' : 'var(--text-primary)' }}>
+                      {student.gpa.toFixed(2)} <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/ 10</span>
                     </span>
                   </td>
                   <td>
@@ -279,7 +279,7 @@ export default function StudentDirectory() {
 
                 <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.65rem' }}>
                   <span className="badge badge-primary">Blood Group: {viewingStudent.bloodGroup}</span>
-                  <span className="badge badge-purple">GPA: {viewingStudent.gpa.toFixed(2)}</span>
+                  <span className="badge badge-purple">CGPA: {viewingStudent.gpa.toFixed(2)} / 10</span>
                   <span className="badge badge-warning">DOB: {viewingStudent.dob}</span>
                 </div>
               </div>

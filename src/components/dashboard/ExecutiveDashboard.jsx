@@ -459,7 +459,7 @@ export default function ExecutiveDashboard() {
                 Passed with Academic Distinction
               </h3>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                Total 474/500 Marks • GPA: 3.94 / 4.00 • Attendance: 96.5% (Exemplary)
+                Total 474/500 Marks • CGPA Pointer: 9.48 / 10.00 • Attendance: 96.5% (Exemplary)
               </p>
             </div>
           </div>
@@ -988,7 +988,7 @@ export default function ExecutiveDashboard() {
               {currentStudent.name}'s Term 2 Examination Marksheet & Automated Merit Board Live
             </h3>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-              Overall Aggregate: <strong>94.8%</strong> (474/500 Marks) • GPA: <strong>3.94 / 4.00</strong> • Result: <strong>Passed with Distinction</strong>
+              Overall Aggregate: <strong>94.8%</strong> (474/500 Marks) • CGPA Pointer: <strong>9.48 / 10.00</strong> • Result: <strong>Passed with Distinction</strong>
             </p>
           </div>
         </div>

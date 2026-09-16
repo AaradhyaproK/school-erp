@@ -349,11 +349,11 @@ export default function ExamManager() {
             </div>
 
             <div style={{ padding: '1rem 1.25rem', borderRadius: '12px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Grade Point Average</span>
+              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>CGPA Pointer (10-Point Scale)</span>
               <div style={{ fontSize: '1.65rem', fontWeight: 800, color: '#7c3aed', marginTop: '0.2rem' }}>
-                {childRecord.gpa.toFixed(2)} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>/ 4.00</span>
+                {childRecord.gpa.toFixed(2)} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>/ 10.00</span>
               </div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Curriculum Letter: A1</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>CBSE Grade: A1 • Distinction</span>
             </div>
 
             <div style={{ padding: '1rem 1.25rem', borderRadius: '12px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
@@ -527,7 +527,7 @@ export default function ExamManager() {
                 {rank1.studentName}
               </h3>
               <div style={{ fontSize: '0.82rem', color: '#475569' }}>
-                Aggregate: <strong style={{ color: '#b45309' }}>{rank1.percentage}%</strong> • GPA <strong style={{ color: '#0f172a' }}>{rank1.gpa.toFixed(2)}</strong>
+                Aggregate: <strong style={{ color: '#b45309' }}>{rank1.percentage}%</strong> • CGPA <strong style={{ color: '#0f172a' }}>{rank1.gpa.toFixed(2)}</strong>/10
               </div>
             </div>
           </div>
@@ -580,7 +580,7 @@ export default function ExamManager() {
                 {rank2.studentName}
               </h3>
               <div style={{ fontSize: '0.82rem', color: '#475569' }}>
-                Aggregate: <strong style={{ color: '#334155' }}>{rank2.percentage}%</strong> • GPA <strong style={{ color: '#0f172a' }}>{rank2.gpa.toFixed(2)}</strong>
+                Aggregate: <strong style={{ color: '#334155' }}>{rank2.percentage}%</strong> • CGPA <strong style={{ color: '#0f172a' }}>{rank2.gpa.toFixed(2)}</strong>/10
               </div>
             </div>
           </div>
@@ -633,7 +633,7 @@ export default function ExamManager() {
                 {rank3.studentName}
               </h3>
               <div style={{ fontSize: '0.82rem', color: '#475569' }}>
-                Aggregate: <strong style={{ color: '#c2410c' }}>{rank3.percentage}%</strong> • GPA <strong style={{ color: '#0f172a' }}>{rank3.gpa.toFixed(2)}</strong>
+                Aggregate: <strong style={{ color: '#c2410c' }}>{rank3.percentage}%</strong> • CGPA <strong style={{ color: '#0f172a' }}>{rank3.gpa.toFixed(2)}</strong>/10
               </div>
             </div>
           </div>
@@ -716,7 +716,7 @@ export default function ExamManager() {
                 <>
                   <th>Total Marks</th>
                   <th>Percentage</th>
-                  <th>GPA</th>
+                  <th>CGPA Pointer (10.0)</th>
                   <th>Subject Breakdown</th>
                 </>
               )}
@@ -803,7 +803,7 @@ export default function ExamManager() {
                       </td>
                       <td>
                         <span className="badge badge-purple" style={{ fontSize: '0.82rem' }}>
-                          {record.gpa.toFixed(2)} / 4.00
+                          {record.gpa.toFixed(2)} / 10.00
                         </span>
                       </td>
                       <td>
@@ -949,7 +949,7 @@ export default function ExamManager() {
                   <th style={{ padding: '0.55rem', textAlign: 'center' }}>Lit</th>
                   <th style={{ padding: '0.55rem', textAlign: 'center' }}>Total (500)</th>
                   <th style={{ padding: '0.55rem', textAlign: 'center' }}>%</th>
-                  <th style={{ padding: '0.55rem', textAlign: 'center' }}>GPA</th>
+                  <th style={{ padding: '0.55rem', textAlign: 'center' }}>CGPA (10.0)</th>
                   <th style={{ padding: '0.55rem', textAlign: 'center' }}>Verdict</th>
                 </tr>
               </thead>
