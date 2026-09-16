@@ -198,6 +198,38 @@ export default function AssignmentQuizHub() {
       ? 'parent' 
       : activeTab;
 
+  // Normalized list of available classes from ERP Context & standard CBSE grades
+  const classOptions = useMemo(() => {
+    const list = [];
+    if (Array.isArray(classes) && classes.length > 0) {
+      classes.forEach((c) => {
+        const name = c.name || (c.grade && c.section ? `${c.grade}-${c.section}` : c.grade || c.id);
+        if (name && !list.includes(name)) {
+          list.push(name);
+        }
+      });
+    }
+    const defaultClasses = [
+      'Class 10-A', 
+      'Class 10-B', 
+      'Class 9-A', 
+      'Class 11-A', 
+      'Class 11-B', 
+      'Class 12-A',
+      'Class 10',
+      'Class 9',
+      'Class 8',
+      'Class 7',
+      'Class 6'
+    ];
+    defaultClasses.forEach((def) => {
+      if (!list.includes(def)) {
+        list.push(def);
+      }
+    });
+    return list;
+  }, [classes]);
+
   // Filters
   const [selectedClass, setSelectedClass] = useState('Class 10-A');
   const [selectedType, setSelectedType] = useState('all');
@@ -1117,9 +1149,9 @@ export default function AssignmentQuizHub() {
                     style={{ padding: '0.4rem 0.8rem', fontSize: '0.82rem', width: 'auto' }}
                   >
                     <option value="all">All Classes</option>
-                    <option value="Class 10-A">Class 10-A</option>
-                    <option value="Class 10-B">Class 10-B</option>
-                    <option value="Class 12-A">Class 12-A</option>
+                    {classOptions.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -2550,9 +2582,9 @@ export default function AssignmentQuizHub() {
                     onChange={(e) => setNewClass(e.target.value)} 
                     className="form-select"
                   >
-                    <option value="Class 10-A">Class 10-A</option>
-                    <option value="Class 10-B">Class 10-B</option>
-                    <option value="Class 12-A">Class 12-A</option>
+                    {classOptions.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -2991,15 +3023,9 @@ export default function AssignmentQuizHub() {
                       className="form-select"
                       style={{ fontSize: '0.88rem', padding: '0.6rem 0.75rem', borderRadius: '8px' }}
                     >
-                      {classes.length > 0 ? (
-                        classes.map((cls) => (
-                          <option key={cls.id || cls.name} value={cls.name}>{cls.name}</option>
-                        ))
-                      ) : (
-                        ['Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10-A', 'Class 10-B', 'Class 11', 'Class 12'].map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))
-                      )}
+                      {classOptions.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
