@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CampusFlow — Next-Gen School ERP & Academic Intelligence Platform Proposal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    @page {
+      size: A4 portrait;
+      margin: 12mm 14mm 14mm 14mm;
+    }
+
+    @page :first {
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      background: #ffffff;
+      font-size: 9.5pt;
+      line-height: 1.55;
+    }
+
+    /* Page container */
+    .page {
+      page-break-after: always;
+      break-after: page;
+      min-height: 270mm;
+      padding-top: 5mm;
+      position: relative;
+    }
+
+    .page:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
+
+    /* Cover Page */
+    .cover-page {
+      min-height: 297mm;
+      background: linear-gradient(145deg, #090d16 0%, #0f172a 40%, #1e1b4b 85%, #31104b 100%);
+      color: #ffffff;
+      padding: 24mm 20mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-page::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0) 70%);
+      border-radius: 50%;
+    }
+
+    .cover-page::after {
+      content: '';
+      position: absolute;
+      bottom: -15%;
+      left: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0) 70%);
+      border-radius: 50%;
+    }
+
+    .cover-top {
+      position: relative;
+      z-index: 2;
+    }
+
+    .cover-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 25px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: #ffffff;
+    }
+
+    .brand-name {
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover-tagline {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 999px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #a5b4fc;
+      margin-bottom: 30px;
+    }
+
+    .cover-title {
+      display: block !important;
+      font-size: 32pt;
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.8px;
+      margin: 0 0 16px 0;
+      color: #ffffff;
+      width: 100%;
+    }
+
+    .cover-title span {
+      background: linear-gradient(90deg, #818cf8 0%, #c084fc 50%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover-subtitle {
+      font-size: 13pt;
+      color: #94a3b8;
+      max-width: 580px;
+      line-height: 1.6;
+      margin-bottom: 35px;
+      font-weight: 400;
+    }
+
+    .cover-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .cover-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .cover-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    .cover-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cover-meta-item small {
+      display: block;
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .cover-meta-item strong {
+      display: block;
+      font-size: 9.5pt;
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* Running Header & Footer */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid #e2e8f0;
+      margin-bottom: 16px;
+      font-size: 7.5pt;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .page-header .doc-title {
+      color: #4f46e5;
+      font-weight: 800;
+    }
+
+    .page-footer {
+      position: absolute;
+      bottom: 2mm;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 7.5pt;
+      color: #94a3b8;
+    }
+
+    .page-footer strong {
+      color: #475569;
+    }
+
+    /* Typography & Layout */
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      margin-top: 0;
+    }
+
+    h1:not(.cover-title) {
+      font-size: 18pt;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 .sec-num {
+      color: #6366f1;
+      font-size: 14pt;
+      font-weight: 900;
+    }
+
+    h2 {
+      font-size: 13pt;
+      font-weight: 700;
+      margin-top: 14px;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      color: #334155;
+    }
+
+    p {
+      margin: 0 0 10px 0;
+      color: #334155;
+    }
+
+    .lead-text {
+      font-size: 10.5pt;
+      color: #334155;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* Highlight Banner */
+    .callout-box {
+      background: #f8fafc;
+      border-left: 3.5px solid #4f46e5;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      margin: 14px 0;
+      font-size: 9pt;
+    }
+
+    .callout-box.emerald {
+      border-left-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    .callout-box.amber {
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    /* Feature Cards */
+    .feature-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .feature-card .card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .feature-card .card-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11pt;
+    }
+
+    .icon-indigo { background: #e0e7ff; color: #4338ca; }
+    .icon-emerald { background: #d1fae5; color: #065f46; }
+    .icon-amber { background: #fef3c7; color: #92400e; }
+    .icon-cyan { background: #cffafe; color: #155e75; }
+    .icon-rose { background: #ffe4e6; color: #9f1239; }
+    .icon-purple { background: #f3e8ff; color: #6b21a8; }
+
+    .feature-card h4 {
+      margin: 0;
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .feature-card p {
+      font-size: 8.5pt;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 6px 0 0 0;
+    }
+
+    .feature-list li {
+      position: relative;
+      padding-left: 14px;
+      margin-bottom: 4px;
+      font-size: 8.5pt;
+      color: #475569;
+    }
+
+    .feature-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #10b981;
+      font-weight: 800;
+      font-size: 8pt;
+    }
+
+    /* Tables */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 8.5pt;
+    }
+
+    table.data-table th {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 700;
+      text-align: left;
+      padding: 7px 10px;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    table.data-table th:first-child {
+      border-radius: 6px 0 0 0;
+    }
+
+    table.data-table th:last-child {
+      border-radius: 0 6px 0 0;
+    }
+
+    table.data-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    table.data-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    table.data-table tr:last-child td {
+      border-bottom: 1.5px solid #cbd5e1;
+    }
+
+    /* Badges */
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .pill-green { background: #dcfce7; color: #15803d; }
+    .pill-blue { background: #dbeafe; color: #1d4ed8; }
+    .pill-purple { background: #f3e8ff; color: #7e22ce; }
+    .pill-amber { background: #fef3c7; color: #b45309; }
+
+    /* Key Metrics Display */
+    .metric-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin: 14px 0;
+    }
+
+    .metric-item {
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .metric-item:last-child {
+      border-right: none;
+    }
+
+    .metric-val {
+      font-size: 20pt;
+      font-weight: 900;
+      color: #38bdf8;
+      line-height: 1;
+      margin-bottom: 4px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .metric-lbl {
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* Architecture / Flow Box */
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 10px;
+      margin: 12px 0;
+    }
+
+    .flow-step {
+      flex: 1;
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px 6px;
+    }
+
+    .flow-step .num {
+      font-size: 7.5pt;
+      font-weight: 800;
+      color: #4f46e5;
+      margin-bottom: 2px;
+    }
+
+    .flow-step .title {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .flow-arrow {
+      font-weight: 900;
+      color: #94a3b8;
+      font-size: 10pt;
+    }
+
+    .proctor-banner {
+      background: #fff1f2;
+      border: 1.5px solid #fecdd3;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .proctor-banner .icon {
+      font-size: 24pt;
+      line-height: 1;
+    }
+
+    .proctor-banner h4 {
+      margin: 0 0 3px 0;
+      color: #be123c;
+      font-size: 10pt;
+    }
+
+    .proctor-banner p {
+      margin: 0;
+      font-size: 8.5pt;
+      color: #9f1239;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 1: COVER PAGE                                                        -->
+  <!-- ========================================================================= -->
+  <div class="cover-page">
+    <div class="cover-top">
+      <div class="cover-brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+          </svg>
+        </div>
+        <div class="brand-name">CampusFlow</div>
+      </div>
+
+      <div class="cover-tagline">Enterprise Institutional Proposal • 2026 Edition</div>
+
+      <h1 class="cover-title">
+        Next-Gen School ERP &<br>
+        <span>Academic Intelligence</span> Platform
+      </h1>
+
+      <div class="cover-subtitle">
+        A unified, AI-native operating system designed to elevate school administration, automate fee operations, orchestrate proctored academic assessments, run biometric 7th CPC payroll, and foster seamless parent-educator trust.
+      </div>
+
+      <div class="cover-badges">
+        <div class="cover-badge"><div class="cover-badge-dot"></div> CBSE / ICSE Curriculum Standard</div>
+        <div class="cover-badge"><div class="cover-badge-dot"></div> Gemini AI Question & Quiz Studio</div>
+        <div class="cover-badge"><div class="cover-badge-dot"></div> Anti-Cheating Online Proctoring</div>
+        <div class="cover-badge"><div class="cover-badge-dot"></div> 7th CPC Biometric Payroll Engine</div>
+        <div class="cover-badge"><div class="cover-badge-dot"></div> 80G Tax-Deductible Smart Cashier</div>
+        <div class="cover-badge"><div class="cover-badge-dot"></div> Cloud Firestore + Offline-First Sync</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="cover-meta-grid">
+        <div class="cover-meta-item">
+          <small>Document Objective</small>
+          <strong>Institutional Product Proposal</strong>
+        </div>
+        <div class="cover-meta-item">
+          <small>Prepared For</small>
+          <strong>School Trustees, Principals & Board</strong>
+        </div>
+        <div class="cover-meta-item">
+          <small>Deployment Framework</small>
+          <strong>Cloud / On-Premise Hybrid</strong>
+        </div>
+        <div class="cover-meta-item">
+          <small>Compliance Standard</small>
+          <strong>CBSE Bylaws, EPF, TDS Section 192</strong>
+        </div>
+        <div class="cover-meta-item">
+          <small>Platform Version</small>
+          <strong>CampusFlow Enterprise v3.8</strong>
+        </div>
+        <div class="cover-meta-item">
+          <small>Confidentiality</small>
+          <strong>Commercial in Confidence</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 2: EXECUTIVE SUMMARY & STRATEGIC VALUE PROPOSITION                   -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <div class="page-header">
+      <span class="doc-title">CampusFlow Enterprise Proposal</span>
+      <span>Section 01 • Strategic Vision & Institutional Impact</span>
+    </div>
+
+    <h1><span class="sec-num">01</span> Executive Summary & Vision</h1>
+
+    <div class="lead-text">
+      Modern educational institutions face unprecedented operational complexities. Administrative staff are overwhelmed by fragmented software systems, manual fee reconciliation, paper-heavy compliance reports, and disconnected communication channels with parents.
+    </div>
+
+    <p>
+      <strong>CampusFlow</strong> resolves this institutional fragmentation by delivering a single, unified, web-native intelligence platform that connects every stakeholder: Trustees, Principals, Teachers, Accountants, Librarians, Students, and Parents.
+    </p>
+
+    <div class="metric-banner">
+      <div class="metric-item">
+        <div class="metric-val">85%</div>
+        <div class="metric-lbl">Faster Fee Reconciliation</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-val">100%</div>
+        <div class="metric-lbl">Digital Exam Integrity</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-val">0</div>
+        <div class="metric-lbl">Payroll Calculation Errors</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-val">90%</div>
+        <div class="metric-lbl">Reduction in Paper Usage</div>
+      </div>
+    </div>
+
+    <h2>Core Pillars of CampusFlow</h2>
+
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-indigo">🏛️</div>
+          <h4>Executive Governance</h4>
+        </div>
+        <p>Complete institutional visibility with real-time KPI metrics, enrollment trends, revenue counters, and audit logs.</p>
+        <ul class="feature-list">
+          <li>Daily collections dashboard</li>
+          <li>Attendance health rings</li>
+          <li>Role-based security (RBAC)</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-emerald">🤖</div>
+          <h4>Curriculum AI Intelligence</h4>
+        </div>
+        <p>Google Gemini AI formulation of NCERT/CBSE aligned assessments from teacher lesson notes or uploaded PDF chapters.</p>
+        <ul class="feature-list">
+          <li>Custom Bloom's taxonomy tuning</li>
+          <li>HOTS & Assertion-Reason items</li>
+          <li>Sub-3-second autonomous generation</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-amber">🛡️</div>
+          <h4>Proctored Examination Hub</h4>
+        </div>
+        <p>A locked-down digital testing portal preventing academic dishonesty with automated violation tracking.</p>
+        <ul class="feature-list">
+          <li>Fullscreen mandatory mode</li>
+          <li>3-warning auto-disqualification</li>
+          <li>Instant scoring & review queues</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-cyan">💳</div>
+          <h4>Smart Cashier & 80G Receipts</h4>
+        </div>
+        <p>Counter fee collection engine supporting cash, UPI, cheques, and online installments with Indian Rupee words.</p>
+        <ul class="feature-list">
+          <li>80G compliant tax certificates</li>
+          <li>Automated late fee accrual</li>
+          <li>Defaulters list with SMS alerts</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-purple">💼</div>
+          <h4>7th CPC Biometric Payroll</h4>
+        </div>
+        <p>Automated staff salary engine incorporating real-world allowances, biometric LOP calculations, and EPF/TDS deductions.</p>
+        <ul class="feature-list">
+          <li>Certified print-ready pay slips</li>
+          <li>Statutory EPF 12% & PT calculation</li>
+          <li>Attendance-linked salary dispersal</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-rose">👨‍👩‍👦</div>
+          <h4>Parent Trust & 360° Dossier</h4>
+        </div>
+        <p>Transparent window for guardians to track attendance, fee balances, homework assignments, and teacher remarks.</p>
+        <ul class="feature-list">
+          <li>Live performance report cards</li>
+          <li>Online fee payment integration</li>
+          <li>Broadcast circular notifications</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout-box emerald">
+      <strong>Zero Installation Footprint:</strong> Built with ultra-modern web technologies (React 18 + Cloud Firestore), CampusFlow runs on any web browser (Chrome, Edge, Safari) across Laptops, Tablets, and Smartphones without requiring costly servers or local software installations.
+    </div>
+
+    <div class="page-footer">
+      <span>CampusFlow Enterprise System Proposal • Confidential</span>
+      <span>Page <strong>2</strong> of <strong>6</strong></span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 3: 7 ROLE-BASED PORTALS & STAKEHOLDER WORKFLOWS                      -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <div class="page-header">
+      <span class="doc-title">CampusFlow Enterprise Proposal</span>
+      <span>Section 02 • Role-Based Stakeholder Ecosystem</span>
+    </div>
+
+    <h1><span class="sec-num">02</span> 7 Dedicated Role-Based Portals</h1>
+
+    <p class="lead-text">
+      CampusFlow enforces strict <strong>Role-Based Access Control (RBAC)</strong>. Each institutional user interacts with an intuitive workspace tailored exclusively to their daily duties:
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 20%;">Portal & Role</th>
+          <th style="width: 32%;">Core Responsibilities</th>
+          <th style="width: 32%;">Key Tools & Modules Available</th>
+          <th style="width: 16%;">Compliance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Super Admin / Principal</strong></td>
+          <td>Executive institutional governance, financial health audit, staff allocation, user permissions, and compliance.</td>
+          <td>Executive KPI Dashboard, CBSE Affiliation Settings, Staff Directory, Defaulters Ledger, Audit Trail.</td>
+          <td><span class="pill pill-purple">Executive</span></td>
+        </tr>
+        <tr>
+          <td><strong>Faculty & Educators</strong></td>
+          <td>Curriculum delivery, attendance marking, quiz creation, student evaluation, and report card remarks.</td>
+          <td>Gemini AI Question Studio, 8-Pending Review Desk, Subject Timetable, Quiz Grader Console.</td>
+          <td><span class="pill pill-blue">Academic</span></td>
+        </tr>
+        <tr>
+          <td><strong>Students</strong></td>
+          <td>Interactive homework completion, proctored examinations, library book requests, and report card inspection.</td>
+          <td>Dedicated Proctored Exam Portal, Study Hub, Digital Report Card, Issued Book Tracker.</td>
+          <td><span class="pill pill-green">Learner</span></td>
+        </tr>
+        <tr>
+          <td><strong>Parents & Guardians</strong></td>
+          <td>Transparent tracking of child's academic growth, daily attendance alerts, fee ledger, and circular reviews.</td>
+          <td>360° Academic Dossier, Online Fee Desk, Downloadable CBSE Report Cards, Teacher Notes.</td>
+          <td><span class="pill pill-amber">Guardian</span></td>
+        </tr>
+        <tr>
+          <td><strong>Bursar / Cashier</strong></td>
+          <td>Daily fee counter operations, receipt issuance, head-wise ledger allocation, late fee waivers, and reconciliations.</td>
+          <td>Smart Cashier Register, 80G Tax Receipt Printer, Bank Reconciliation Ledger, Defaulters List.</td>
+          <td><span class="pill pill-green">Financial</span></td>
+        </tr>
+        <tr>
+          <td><strong>HR & Payroll Officer</strong></td>
+          <td>Faculty lifecycle, leave tracking, biometric attendance audit, 7th CPC payroll processing, and pay slip dispersal.</td>
+          <td>Biometric Attendance Reconciler, Salary Stack Generator, EPF/TDS Ledger, Signed Pay Slip Engine.</td>
+          <td><span class="pill pill-purple">HR / Legal</span></td>
+        </tr>
+        <tr>
+          <td><strong>Librarian</strong></td>
+          <td>Physical & digital book cataloging, barcode issue/return desk, overdue fine recovery, and circulation stats.</td>
+          <td>Barcode Circulation Desk, Catalog Search, Overdue Calculator, Reading Passports.</td>
+          <td><span class="pill pill-blue">Circulation</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Operational Workflow Synergy</h2>
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div class="num">STEP 1</div>
+        <div class="title">Admin Sets Term</div>
+        <small style="color: #64748b; font-size: 7pt;">Batches, Fees & Staff</small>
+      </div>
+      <div class="flow-arrow">➔</div>
+      <div class="flow-step">
+        <div class="num">STEP 2</div>
+        <div class="title">Teachers Teach & Test</div>
+        <small style="color: #64748b; font-size: 7pt;">AI Quizzes & Attendance</small>
+      </div>
+      <div class="flow-arrow">➔</div>
+      <div class="flow-step">
+        <div class="num">STEP 3</div>
+        <div class="title">Students Learn</div>
+        <small style="color: #64748b; font-size: 7pt;">Proctored Exams & Tasks</small>
+      </div>
+      <div class="flow-arrow">➔</div>
+      <div class="flow-step">
+        <div class="num">STEP 4</div>
+        <div class="title">Accounts & HR Reconcile</div>
+        <small style="color: #64748b; font-size: 7pt;">Fees & 7th CPC Payroll</small>
+      </div>
+      <div class="flow-arrow">➔</div>
+      <div class="flow-step">
+        <div class="num">STEP 5</div>
+        <div class="title">Parents Engaged</div>
+        <small style="color: #64748b; font-size: 7pt;">Reports & Fee Receipts</small>
+      </div>
+    </div>
+
+    <div class="callout-box">
+      <strong>Zero Role-Leakage Guarantee:</strong> Every API transaction and state mutation is strictly isolated. Students cannot view evaluation rubrics or answers before release, parents cannot access other children's financial records, and faculty view only their assigned class divisions.
+    </div>
+
+    <div class="page-footer">
+      <span>CampusFlow Enterprise System Proposal • Confidential</span>
+      <span>Page <strong>3</strong> of <strong>6</strong></span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 4: ACADEMIC INTELLIGENCE, AI QUIZZING & EXAM PROCTORING             -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <div class="page-header">
+      <span class="doc-title">CampusFlow Enterprise Proposal</span>
+      <span>Section 03 • AI Assessment & Digital Exam Integrity</span>
+    </div>
+
+    <h1><span class="sec-num">03</span> Academic Intelligence & Examination Proctoring</h1>
+
+    <p class="lead-text">
+      CampusFlow combines cutting-edge generative AI with rigorous exam security to empower teachers and maintain uncompromising academic standards.
+    </p>
+
+    <div class="grid-2">
+      <div class="feature-card" style="border-top: 3.5px solid #6366f1;">
+        <div class="card-head">
+          <div class="card-icon icon-indigo">⚡</div>
+          <h4>Gemini AI Question Studio</h4>
+        </div>
+        <p style="margin-bottom: 8px;">
+          Autonomous, curriculum-aligned question generation powered by multi-model Google Gemini infrastructure. Teachers can formulate rich quizzes in seconds.
+        </p>
+        <ul class="feature-list">
+          <li><strong>Teacher Notes & PDF Extraction:</strong> Upload PDF chapters or paste lecture notes; AI strictly restricts questions to the uploaded content.</li>
+          <li><strong>Diverse Question Archetypes:</strong> Standard MCQs, CBSE Assertion & Reason, Numerical Computations, and HOTS Case Studies.</li>
+          <li><strong>Cognitive Level Tuning:</strong> Select between Bloom's Recall, Balanced, or Analytical High-Order Thinking Skills.</li>
+          <li><strong>Step-by-Step Explanations:</strong> Every question auto-generates pedagogical explanations for post-test student remediation.</li>
+          <li><strong>One-Click Workflow:</strong> Review, fine-tune marks or options, and immediately publish to the active class division.</li>
+        </ul>
+      </div>
+
+      <div class="feature-card" style="border-top: 3.5px solid #e11d48;">
+        <div class="card-head">
+          <div class="card-icon icon-rose">🛡️</div>
+          <h4>Online Proctoring Exam Portal</h4>
+        </div>
+        <p style="margin-bottom: 8px;">
+          A locked-down, distraction-free environment for institutional assessments with automated digital proctoring checks.
+        </p>
+        <ul class="feature-list">
+          <li><strong>Mandatory Fullscreen Lockdown:</strong> Prevents opening background applications or split-screen notes.</li>
+          <li><strong>Tab Switch Detector:</strong> Immediately detects window defocus or tab switching, pauses test, and issues audible warnings.</li>
+          <li><strong>3-Strike Auto-Disqualification:</strong> Upon the 3rd tab switch, the exam automatically locks and submits with a Disqualification Flag.</li>
+          <li><strong>Status-Coded Question Palette:</strong> Green (Answered), Red (Unanswered), Purple (Marked for Review), Gray (Not Visited).</li>
+          <li><strong>Proctoring Audit Trail:</strong> Logs student time, violation counts, and integrity rating for teacher inspection.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proctor-banner">
+      <div class="icon">🚨</div>
+      <div>
+        <h4>Proctoring Integrity Guaranteed for Board Standards</h4>
+        <p>Every student submission embeds cryptographic timestamping, question response vectors, and tab-switch violation counters directly visible to teachers in the <em>Pending Student Review Queue</em> before official grade release.</p>
+      </div>
+    </div>
+
+    <h2>Continuous Formative & Summative Evaluation Desk</h2>
+
+    <div class="grid-3">
+      <div class="feature-card">
+        <h4>8-Pending Review Queue</h4>
+        <p>Teachers receive a prioritized queue of student submissions requiring attention, with automated score previews and remark inputs.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Question-Level Analysis</h4>
+        <p>Detailed breakdown of class accuracy per question, identifying conceptual misconceptions across chapters.</p>
+      </div>
+      <div class="feature-card">
+        <h4>CBSE CCE Report Cards</h4>
+        <p>Automated compilation of scholastic and co-scholastic marks into official printable CBSE report cards with school seal.</p>
+      </div>
+    </div>
+
+    <div class="callout-box amber">
+      <strong>High Availability AI Fallback Chain:</strong> Built with an intelligent model fallback chain (Gemini Flash Lite, Gemini 3.5 Flash, Gemini 3.6 Flash) ensuring zero downtime and sub-3-second response times even during peak school testing hours.
+    </div>
+
+    <div class="page-footer">
+      <span>CampusFlow Enterprise System Proposal • Confidential</span>
+      <span>Page <strong>4</strong> of <strong>6</strong></span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 5: FINANCIAL OPERATIONS, PAYROLL & CAMPUS UTILITIES                 -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <div class="page-header">
+      <span class="doc-title">CampusFlow Enterprise Proposal</span>
+      <span>Section 04 • Financial Operations, Payroll & Campus Utilities</span>
+    </div>
+
+    <h1><span class="sec-num">04</span> Financial Operations & 7th CPC Payroll</h1>
+
+    <p class="lead-text">
+      CampusFlow digitizes institutional cash flow with an end-to-end fee accounting engine and an audit-compliant staff payroll system designed around Indian statutory requirements.
+    </p>
+
+    <div class="grid-2">
+      <div>
+        <h2>Fee Counter & Smart Cashier Desk</h2>
+        <p>Streamline bursar operations with high-speed receipt generation and real-time ledger accounting:</p>
+        <ul class="feature-list">
+          <li><strong>Multi-Head Fee Structures:</strong> Tuition, Laboratory, Smart Class, Sports, Annual Library, and Transport.</li>
+          <li><strong>Instant 80G Tax Receipts:</strong> Print official fee receipts with school logo, receipt number, parent PAN, and total amount converted into Indian Rupee words.</li>
+          <li><strong>Flexible Installment Management:</strong> Term-wise, quarterly, or monthly schedules with automated late fee calculation.</li>
+          <li><strong>Defaulters Tracking:</strong> Real-time filtering of students with overdue balances; one-click SMS/Email parent reminders.</li>
+          <li><strong>Payment Modalities:</strong> Supports Cash, UPI, Cheque, NEFT/RTGS, and Online Gateway transactions.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>7th CPC Staff Payroll & Biometrics</h2>
+        <p>Eliminate spreadsheet errors with a fully automated, attendance-reconciled salary computation stack:</p>
+        <ul class="feature-list">
+          <li><strong>Biometric Attendance Integration:</strong> Tracks Total Working Days, Days Worked, Paid Leaves, and Loss of Pay (LOP).</li>
+          <li><strong>Real-World Salary Stack:</strong> Basic Pay, Dearness Allowance (DA), House Rent Allowance (HRA), Transport Allowance (TA), Medical & Special Allowances.</li>
+          <li><strong>Statutory Deductions:</strong> Automated EPF (12% of Basic+DA), Professional Tax (PT), and TDS Section 192 deductions.</li>
+          <li><strong>Certified Printable Pay Slips:</strong> Official salary slips with bank details, UAN/PF numbers, Rupee words, and authorized signatory seals.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Integrated Campus Utility Modules</h2>
+
+    <div class="grid-4">
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-indigo">📚</div>
+          <h4>Library Desk</h4>
+        </div>
+        <p>Barcode check-in/out, catalog search, student reading history, and auto-computed overdue fines.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-amber">🚌</div>
+          <h4>Transport Fleet</h4>
+        </div>
+        <p>Bus route tracking, stop schedules, driver verification, emergency contacts, and vehicle compliance.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-rose">📢</div>
+          <h4>Notice Board</h4>
+        </div>
+        <p>Targeted digital circulars dispatched to specific cohorts (All School, Parents, Students, or Teachers).</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-head">
+          <div class="card-icon icon-emerald">💬</div>
+          <h4>Helpdesk SLA</h4>
+        </div>
+        <p>Grievance ticketing system for parents and staff with tracked resolution statuses and audit trail.</p>
+      </div>
+    </div>
+
+    <h2>Document Generation Capabilities</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Document Type</th>
+          <th>Output Format</th>
+          <th>Regulatory Standard</th>
+          <th>Features Included</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CBSE Academic Report Card</strong></td>
+          <td>Printable High-Res PDF</td>
+          <td>CBSE CCE Guidelines</td>
+          <td>Marks, Grades, Percentile, Teacher Remarks, School Crest</td>
+        </tr>
+        <tr>
+          <td><strong>Fee Receipt & Tax Certificate</strong></td>
+          <td>Printable Vector Slip</td>
+          <td>Income Tax Section 80G</td>
+          <td>Head-wise breakdown, Rupee words, QR verification</td>
+        </tr>
+        <tr>
+          <td><strong>Monthly Staff Salary Slip</strong></td>
+          <td>Authorized Bank Pay Slip</td>
+          <td>Payment of Wages & EPF Act</td>
+          <td>Biometric LOP audit, DA/HRA stack, PF/PT/TDS deduction table</td>
+        </tr>
+        <tr>
+          <td><strong>Student Transfer / Bonafide</strong></td>
+          <td>Institutional Certificate</td>
+          <td>State Education Directorate</td>
+          <td>Student admission number, DOB in words, conduct certificate</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="page-footer">
+      <span>CampusFlow Enterprise System Proposal • Confidential</span>
+      <span>Page <strong>5</strong> of <strong>6</strong></span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 6: DEPLOYMENT ROADMAP, SECURITY & COMMERCIAL SIGN-OFF               -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <div class="page-header">
+      <span class="doc-title">CampusFlow Enterprise Proposal</span>
+      <span>Section 05 • Deployment Roadmap & Commercial Framework</span>
+    </div>
+
+    <h1><span class="sec-num">05</span> Implementation Roadmap & Sign-off</h1>
+
+    <p class="lead-text">
+      CampusFlow follows a structured <strong>4-Week Rapid Deployment Protocol</strong> ensuring zero disruption to existing academic schedules and seamless staff onboarding.
+    </p>
+
+    <div class="grid-4">
+      <div class="feature-card" style="border-top: 3px solid #6366f1;">
+        <h4 style="color: #4338ca;">Week 1</h4>
+        <h3 style="font-size: 9pt; margin-top: 2px;">Data Ingestion</h3>
+        <p style="font-size: 8pt;">Import existing student rosters, staff payroll records, and fee structures from legacy spreadsheets.</p>
+      </div>
+
+      <div class="feature-card" style="border-top: 3px solid #0284c7;">
+        <h4 style="color: #0369a1;">Week 2</h4>
+        <h3 style="font-size: 9pt; margin-top: 2px;">Configuration</h3>
+        <p style="font-size: 8pt;">Set up CBSE grading scales, fee payment installments, timetable slots, and staff biometric rules.</p>
+      </div>
+
+      <div class="feature-card" style="border-top: 3px solid #10b981;">
+        <h4 style="color: #047857;">Week 3</h4>
+        <h3 style="font-size: 9pt; margin-top: 2px;">Staff Training</h3>
+        <p style="font-size: 8pt;">Hands-on workshops for teachers (AI quizzes), accountants (fee counter), and administrators.</p>
+      </div>
+
+      <div class="feature-card" style="border-top: 3px solid #8b5cf6;">
+        <h4 style="color: #6d28d9;">Week 4</h4>
+        <h3 style="font-size: 9pt; margin-top: 2px;">Campus Go-Live</h3>
+        <p style="font-size: 8pt;">Institutional switchover with on-site pilot support, parent portal rollout, and system verification.</p>
+      </div>
+    </div>
+
+    <h2>Enterprise Security & Infrastructure Architecture</h2>
+    <div class="grid-3">
+      <div class="feature-card">
+        <h4>🔒 Bank-Grade Security</h4>
+        <p>AES-256 data encryption in transit and at rest. Strict role segregation prevents unauthorized data exposure.</p>
+      </div>
+      <div class="feature-card">
+        <h4>☁️ 99.9% Uptime SLA</h4>
+        <p>Powered by Google Cloud Firestore serverless infrastructure with automated real-time database backups.</p>
+      </div>
+      <div class="feature-card">
+        <h4>📱 Device Agnostic</h4>
+        <p>Fully responsive web client accessible across Windows, macOS, Chromebooks, iPads, and mobile smartphones.</p>
+      </div>
+    </div>
+
+    <h2>Commercial Partnership & Next Steps</h2>
+    <table class="data-table" style="margin-top: 6px;">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Scope & Inclusions</th>
+          <th>Technical Support</th>
+          <th>Deployment Model</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CampusFlow Enterprise</strong></td>
+          <td>All 14 Modules, Unlimited Student/Teacher Accounts, Gemini AI Studio, Online Proctoring, Biometric Payroll, 80G Receipts.</td>
+          <td>24/7 Dedicated Account Manager, Priority Bug Fix SLA, Unlimited Staff Training Sessions.</td>
+          <td>Managed Cloud Dedicated Instance / Hybrid</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid-2" style="margin-top: 20px;">
+      <div style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 14px;">
+        <h4 style="margin: 0 0 4px 0; color: #0f172a; font-size: 9pt;">Prepared By CampusFlow Solutions</h4>
+        <p style="font-size: 8pt; color: #64748b; margin-bottom: 25px;">Institutional Technology Division</p>
+        <div style="border-top: 1px dashed #94a3b8; padding-top: 6px; font-size: 8pt; color: #475569;">
+          Authorized Executive Signatory • CampusFlow ERP
+        </div>
+      </div>
+
+      <div style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 14px;">
+        <h4 style="margin: 0 0 4px 0; color: #0f172a; font-size: 9pt;">Accepted & Approved on Behalf of Client</h4>
+        <p style="font-size: 8pt; color: #64748b; margin-bottom: 25px;">Principal / Chairman / Authorized Board Trustee</p>
+        <div style="border-top: 1px dashed #94a3b8; padding-top: 6px; font-size: 8pt; color: #475569;">
+          Institutional Seal & Date of Execution
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-box emerald" style="margin-top: 14px;">
+      <strong>Ready for Immediate Demonstration:</strong> A fully functioning sandbox environment pre-populated with CBSE academic data, fee rosters, and AI quiz generation is available for institutional board presentation upon request.
+    </div>
+
+    <div class="page-footer">
+      <span>CampusFlow Enterprise System Proposal • Confidential</span>
+      <span>Page <strong>6</strong> of <strong>6</strong></span>
+    </div>
+  </div>
+
+</body>
+</html>
