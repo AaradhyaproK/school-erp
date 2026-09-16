@@ -39,3 +39,7 @@ Thumbs.db
 .parcel-cache/
 .eslintcache
 .temp/
+
+# Internal Confidential Strategy Dossiers
+*internal*
+scripts/internal_*
