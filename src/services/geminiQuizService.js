@@ -8,8 +8,14 @@ const GEMINI_API_KEY =
   (typeof process !== 'undefined' && process.env?.VITE_GEMINI_API_KEY) || 
   '';
 
-const PRIMARY_MODEL = 'gemini-flash-latest';
-const FALLBACK_MODEL = 'gemini-3.6-flash';
+// Optimized model hierarchy: prioritizing fast, high-availability lite models first to avoid 503 demand spikes
+const CANDIDATE_MODELS = [
+  'gemini-flash-lite-latest',
+  'gemini-3.5-flash-lite',
+  'gemini-3.5-flash',
+  'gemini-flash-latest',
+  'gemini-3.6-flash'
+];
 
 /**
  * Generate MCQs using Gemini
@@ -38,6 +44,10 @@ export async function generateQuizQuestionsWithAI({
   markingScheme = '+5 / -0',
   bloomLevel = 'balanced'
 }) {
+  if (!GEMINI_API_KEY) {
+    throw new Error('Gemini API key is not configured. Please add VITE_GEMINI_API_KEY to your .env file.');
+  }
+
   if (!topic && !notes) {
     throw new Error('Please provide either a Topic, Chapter Name, or Upload Notes for the AI to formulate questions.');
   }
@@ -121,12 +131,13 @@ Example JSON structure:
     ],
     generationConfig: {
       temperature: 0.3,
-      topP: 0.95
+      topP: 0.95,
+      responseMimeType: 'application/json'
     }
   };
 
   // Helper to call a specific model with timeout
-  const callModel = async (modelName, timeoutMs = 8000) => {
+  const callModel = async (modelName, timeoutMs = 16000) => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -161,17 +172,26 @@ Example JSON structure:
   };
 
   let data;
-  try {
-    // Attempt with requested primary model first
-    data = await callModel(PRIMARY_MODEL);
-  } catch (primaryErr) {
-    console.warn(`Primary model (${PRIMARY_MODEL}) failed, attempting fallback (${FALLBACK_MODEL}):`, primaryErr.message);
-    // If primary model experiences high demand (503) or is unavailable, seamlessly fallback
+  const failureLog = [];
+
+  // Try candidate models in order of priority & responsiveness
+  for (const modelName of CANDIDATE_MODELS) {
     try {
-      data = await callModel(FALLBACK_MODEL);
-    } catch (fallbackErr) {
-      throw new Error(`AI generation service error: ${primaryErr.message}. Fallback error: ${fallbackErr.message}`);
+      data = await callModel(modelName, 16000);
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text && text.trim().length > 0) {
+        break; // Successfully generated content
+      }
+    } catch (err) {
+      console.warn(`[Gemini AI] Model ${modelName} failed, trying next candidate:`, err.message);
+      failureLog.push(`${modelName}: ${err.message}`);
     }
+  }
+
+  if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+    throw new Error(
+      `All AI models are currently unavailable. Details:\n${failureLog.join('\n')}`
+    );
   }
 
   // Extract generated text
