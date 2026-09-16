@@ -344,7 +344,7 @@ export default function ExecutiveDashboard() {
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '1rem' }}>Today's Teaching Schedule (Monday)</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
               {timetable.slice(0, 4).map((slot, idx) => (
-                <div key={idx} style={{ padding: '0.85rem', borderRadius: 'var(--radius-sm)', background: 'var(--bg-surface-elevated)', borderLeft: '4px solid var(--primary)' }}>
+                <div key={idx} style={{ padding: '0.85rem', borderRadius: 'var(--radius-sm)', background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-light)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
                     <span className="badge badge-primary">Period {slot.period}</span>
                     <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{slot.time}</span>
@@ -481,7 +481,7 @@ export default function ExecutiveDashboard() {
         {/* Student actions */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
           {/* Active Homework & MCQ Quizzes */}
-          <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '4px solid var(--primary)' }}>
+          <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Coursework & MCQ Quizzes</h3>
@@ -522,7 +522,7 @@ export default function ExecutiveDashboard() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {studentLoans.map((loan) => (
-                  <div key={loan.id} style={{ padding: '0.75rem', borderRadius: 'var(--radius-sm)', background: 'var(--bg-surface-elevated)', borderLeft: '3px solid var(--primary)' }}>
+                  <div key={loan.id} style={{ padding: '0.75rem', borderRadius: 'var(--radius-sm)', background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-light)' }}>
                     <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>{loan.bookTitle}</div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
                       <span>Due Date: {loan.dueDate}</span>
@@ -637,7 +637,6 @@ export default function ExecutiveDashboard() {
                         padding: '0.75rem 1rem', 
                         borderRadius: 'var(--radius-sm)', 
                         background: 'var(--bg-surface-elevated)', 
-                        borderLeft: `4px solid ${isOverdue ? 'var(--danger)' : 'var(--primary)'}`,
                         border: '1px solid var(--border-light)'
                       }}
                     >
@@ -797,7 +796,6 @@ export default function ExecutiveDashboard() {
                         padding: '0.75rem 1rem', 
                         borderRadius: 'var(--radius-sm)', 
                         background: 'var(--bg-surface-elevated)', 
-                        borderLeft: `4px solid ${isPaid ? 'var(--success)' : 'var(--warning)'}`,
                         border: '1px solid var(--border-light)'
                       }}
                     >

@@ -429,8 +429,8 @@ export default function ExamManager() {
           <div style={{ 
             padding: '1.15rem 1.35rem', 
             borderRadius: '10px', 
-            background: 'rgba(99, 102, 241, 0.05)', 
-            borderLeft: '4px solid var(--primary)',
+            background: 'rgba(99, 102, 241, 0.04)', 
+            border: '1px solid rgba(99, 102, 241, 0.2)',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '0.85rem'
@@ -486,8 +486,7 @@ export default function ExamManager() {
             className="glass-panel"
             style={{
               padding: '1.4rem',
-              border: '1.5px solid #fde68a',
-              borderTop: '5px solid #d97706',
+              border: '1px solid #fde68a',
               background: '#fffdfa',
               borderRadius: 'var(--radius-md)',
               display: 'flex',
@@ -512,13 +511,13 @@ export default function ExamManager() {
                   fontSize: '0.74rem', 
                   fontWeight: 800, 
                   padding: '0.2rem 0.65rem',
-                  borderRadius: 'var(--radius-full)',
+                  borderRadius: '6px',
                   border: '1px solid #fde68a'
                 }}>
                   <Trophy size={13} color="#d97706" /> Rank 1 • Gold Medalist
                 </span>
                 {rank1.studentId === childRecord?.studentId && (
-                  <span style={{ background: 'var(--primary)', color: '#fff', fontSize: '0.68rem', padding: '0.15rem 0.45rem', borderRadius: '999px', fontWeight: 800 }}>
+                  <span style={{ background: 'var(--primary)', color: '#fff', fontSize: '0.68rem', padding: '0.15rem 0.45rem', borderRadius: '4px', fontWeight: 800 }}>
                     ⭐ Your Child
                   </span>
                 )}
@@ -539,8 +538,7 @@ export default function ExamManager() {
             className="glass-panel"
             style={{
               padding: '1.4rem',
-              border: rank2.studentId === childRecord?.studentId ? '2px solid var(--primary)' : '1.5px solid #e2e8f0',
-              borderTop: '5px solid #64748b',
+              border: rank2.studentId === childRecord?.studentId ? '2px solid var(--primary)' : '1px solid #e2e8f0',
               background: rank2.studentId === childRecord?.studentId ? 'linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%)' : '#ffffff',
               borderRadius: 'var(--radius-md)',
               display: 'flex',
@@ -565,13 +563,13 @@ export default function ExamManager() {
                   fontSize: '0.74rem', 
                   fontWeight: 800, 
                   padding: '0.2rem 0.65rem',
-                  borderRadius: 'var(--radius-full)',
+                  borderRadius: '6px',
                   border: '1px solid #cbd5e1'
                 }}>
                   <Medal size={13} color="#64748b" /> Rank 2 • Silver Medalist
                 </span>
                 {rank2.studentId === childRecord?.studentId && (
-                  <span style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', color: '#fff', fontSize: '0.68rem', padding: '0.15rem 0.5rem', borderRadius: '999px', fontWeight: 800, boxShadow: '0 2px 6px rgba(79, 70, 229, 0.3)' }}>
+                  <span style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', color: '#fff', fontSize: '0.68rem', padding: '0.15rem 0.5rem', borderRadius: '4px', fontWeight: 800, boxShadow: '0 2px 6px rgba(79, 70, 229, 0.3)' }}>
                     ⭐ Your Child
                   </span>
                 )}
@@ -592,8 +590,7 @@ export default function ExamManager() {
             className="glass-panel"
             style={{
               padding: '1.4rem',
-              border: '1.5px solid #fed7aa',
-              borderTop: '5px solid #c2410c',
+              border: '1px solid #fed7aa',
               background: '#fffbf7',
               borderRadius: 'var(--radius-md)',
               display: 'flex',
@@ -618,13 +615,13 @@ export default function ExamManager() {
                   fontSize: '0.74rem', 
                   fontWeight: 800, 
                   padding: '0.2rem 0.65rem',
-                  borderRadius: 'var(--radius-full)',
+                  borderRadius: '6px',
                   border: '1px solid #fed7aa'
                 }}>
                   <Medal size={13} color="#c2410c" /> Rank 3 • Bronze Medalist
                 </span>
                 {rank3.studentId === childRecord?.studentId && (
-                  <span style={{ background: 'var(--primary)', color: '#fff', fontSize: '0.68rem', padding: '0.15rem 0.45rem', borderRadius: '999px', fontWeight: 800 }}>
+                  <span style={{ background: 'var(--primary)', color: '#fff', fontSize: '0.68rem', padding: '0.15rem 0.45rem', borderRadius: '4px', fontWeight: 800 }}>
                     ⭐ Your Child
                   </span>
                 )}
@@ -735,8 +732,7 @@ export default function ExamManager() {
                 <tr 
                   key={record.studentId}
                   style={{
-                    background: isChild ? 'rgba(79, 70, 229, 0.05)' : 'inherit',
-                    borderLeft: isChild ? '4px solid var(--primary)' : 'none'
+                    background: isChild ? 'rgba(79, 70, 229, 0.05)' : 'inherit'
                   }}
                 >
                   <td style={{ fontWeight: 800, width: '70px' }}>
@@ -930,7 +926,7 @@ export default function ExamManager() {
               <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
                 OFFICIAL EXAMINATION CELL • MASTER COHORT TABULATION SHEET
               </p>
-              <div style={{ display: 'inline-block', marginTop: '0.35rem', padding: '0.2rem 0.75rem', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-full)', fontSize: '0.75rem', fontWeight: 700 }}>
+              <div style={{ display: 'inline-block', marginTop: '0.35rem', padding: '0.2rem 0.75rem', background: 'var(--bg-surface-elevated)', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 }}>
                 {currentExam.title.toUpperCase()} — {currentExam.academicYear}
               </div>
             </div>
@@ -1057,7 +1053,7 @@ export default function ExamManager() {
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', marginTop: '0.6rem' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', background: '#0f172a', color: '#ffffff', padding: '0.25rem 0.95rem', borderRadius: 'var(--radius-full)' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', background: '#0f172a', color: '#ffffff', padding: '0.25rem 0.95rem', borderRadius: '6px' }}>
                   CBSE SECONDARY SCHOOL EXAMINATION (CLASS X) 2026
                 </span>
               </div>
@@ -1192,7 +1188,7 @@ export default function ExamManager() {
             </div>
 
             {/* Remarks */}
-            <div style={{ padding: '0.9rem 1.15rem', borderRadius: '8px', background: 'rgba(79, 70, 229, 0.04)', borderLeft: '4px solid var(--primary)' }}>
+            <div style={{ padding: '0.9rem 1.15rem', borderRadius: '8px', background: 'rgba(79, 70, 229, 0.04)', border: '1px solid rgba(79, 70, 229, 0.15)' }}>
               <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>
                 Class Educator & Board Recommendation
               </span>

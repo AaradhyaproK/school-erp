@@ -86,8 +86,8 @@ export default function NoticeBoard() {
             key={notice.id} 
             className="glass-panel" 
             style={{ 
-              padding: '1.5rem', 
-              borderLeft: `5px solid ${notice.priority === 'Urgent' ? 'var(--danger)' : notice.priority === 'High' ? 'var(--warning)' : 'var(--primary)'}` 
+              padding: '1.5rem',
+              border: '1px solid var(--border-light)'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.65rem' }}>

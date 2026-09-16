@@ -129,7 +129,7 @@ export default function TimetableSchedule() {
               className="glass-panel glass-panel-hover"
               style={{
                 padding: '1.25rem',
-                borderLeft: `4px solid ${style.border}`,
+                border: `1px solid ${style.border}33`,
                 background: style.bg
               }}
             >

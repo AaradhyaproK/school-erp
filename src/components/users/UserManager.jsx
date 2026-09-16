@@ -116,7 +116,7 @@ export default function UserManager() {
           { role: 'Finance / Bursar', count: users.filter(u => u.role === 'accountant').length, color: 'var(--warning)', bg: 'var(--warning-bg)' },
           { role: 'Library Desk', count: users.filter(u => u.role === 'librarian').length, color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.12)' }
         ].map((item, idx) => (
-          <div key={idx} className="glass-panel" style={{ padding: '1rem', borderLeft: `3px solid ${item.color}` }}>
+          <div key={idx} className="glass-panel" style={{ padding: '1rem', border: '1px solid var(--border-light)' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>{item.role}</span>
             <div style={{ fontSize: '1.45rem', fontWeight: 800, color: item.color, marginTop: '0.2rem' }}>{item.count} Accounts</div>
           </div>

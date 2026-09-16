@@ -312,7 +312,7 @@ export default function StudentDirectory() {
             </div>
 
             {/* Health & Clinical Notes */}
-            <div style={{ padding: '1rem', borderRadius: 'var(--radius-sm)', background: 'var(--bg-surface-elevated)', borderLeft: '4px solid var(--secondary)' }}>
+            <div style={{ padding: '1rem', borderRadius: 'var(--radius-sm)', background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-light)' }}>
               <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--secondary)', marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <Heart size={14} /> Medical & Nurse Clinic Observations
               </h4>

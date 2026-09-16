@@ -518,7 +518,7 @@ export default function ComplaintBox() {
             </div>
           ) : (
             myComplaints.map(t => (
-              <div key={t.id} className="glass-panel" style={{ padding: '1.25rem', borderLeft: `4px solid ${t.status === 'Resolved' ? 'var(--success)' : t.status === 'Under Investigation' ? 'var(--warning)' : 'var(--danger)'}` }}>
+              <div key={t.id} className="glass-panel" style={{ padding: '1.25rem', border: '1px solid var(--border-light)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

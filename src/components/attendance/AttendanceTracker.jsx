@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useERP } from '../../context/ERPContext';
+import Modal from '../common/Modal';
 import { 
   Calendar, 
   CheckCircle2, 
@@ -31,6 +32,7 @@ export default function AttendanceTracker() {
   const [records, setRecords] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'Present' | 'Absent' | 'Late' | 'Excused'
+  const [confirmStatus, setConfirmStatus] = useState(null); // 'Present' | 'Absent' | 'Late' | null
 
   // Filter students for the selected class
   const classStudents = useMemo(() => {
@@ -237,49 +239,27 @@ export default function AttendanceTracker() {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Users size={16} color="var(--primary)" />
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                Total: {classStudents.length}
-              </span>
+          <div className="attendance-metric-strip" style={{ flex: 1 }}>
+            <div className="metric-item">
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 700 }}>TOTAL</span>
+              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>{classStudents.length}</span>
             </div>
-            <span style={{ color: '#cbd5e1' }}>•</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#047857' }}>
-                Present: {presentCount}
-              </span>
+            <div className="metric-item">
+              <span style={{ fontSize: '0.68rem', color: '#047857', fontWeight: 700 }}>PRESENT</span>
+              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#047857' }}>{presentCount}</span>
             </div>
-            <span style={{ color: '#cbd5e1' }}>•</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#b91c1c' }}>
-                Absent: {absentCount}
-              </span>
+            <div className="metric-item">
+              <span style={{ fontSize: '0.68rem', color: '#b91c1c', fontWeight: 700 }}>ABSENT</span>
+              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#b91c1c' }}>{absentCount}</span>
             </div>
-            <span style={{ color: '#cbd5e1' }}>•</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#b45309' }}>
-                Late: {lateCount}
-              </span>
+            <div className="metric-item">
+              <span style={{ fontSize: '0.68rem', color: '#b45309', fontWeight: 700 }}>LATE</span>
+              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#b45309' }}>{lateCount}</span>
             </div>
-            {excusedCount > 0 && (
-              <>
-                <span style={{ color: '#cbd5e1' }}>•</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', display: 'inline-block' }} />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#6d28d9' }}>
-                    Excused: {excusedCount}
-                  </span>
-                </div>
-              </>
-            )}
           </div>
 
           {/* Presence Rate Indicator */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}>
             <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
               Attendance:
             </span>
@@ -294,7 +274,7 @@ export default function AttendanceTracker() {
         </div>
 
         {/* Visual Progress Bar */}
-        <div style={{ width: '100%', height: '7px', background: '#f1f5f9', borderRadius: '999px', overflow: 'hidden', display: 'flex' }}>
+        <div style={{ width: '100%', height: '7px', background: '#f1f5f9', borderRadius: '4px', overflow: 'hidden', display: 'flex' }}>
           <div style={{ width: `${(presentCount / total) * 100}%`, background: '#10b981', transition: 'width 0.3s ease' }} title={`Present: ${presentCount}`} />
           <div style={{ width: `${(lateCount / total) * 100}%`, background: '#f59e0b', transition: 'width 0.3s ease' }} title={`Late: ${lateCount}`} />
           <div style={{ width: `${(excusedCount / total) * 100}%`, background: '#8b5cf6', transition: 'width 0.3s ease' }} title={`Excused: ${excusedCount}`} />
@@ -315,60 +295,62 @@ export default function AttendanceTracker() {
         {/* Date, Class, & Batch Quick Buttons */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.85rem' }}>
           {/* Left: Quick Date & Class Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
-            {/* Date Switcher with Prev / Next Arrows */}
-            <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '0.2rem 0.35rem' }}>
+          <div className="attendance-date-class-container">
+            <div className="date-row">
+              {/* Date Switcher with Prev / Next Arrows */}
+              <div className="date-picker-box" style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.2rem 0.35rem' }}>
+                <button 
+                  onClick={() => changeDateByDays(-1)} 
+                  style={{ background: 'transparent', border: 'none', padding: '0.3rem', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                  title="Previous Day"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <input 
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  style={{ 
+                    border: 'none', 
+                    background: 'transparent', 
+                    fontWeight: 700, 
+                    fontSize: '0.85rem', 
+                    color: 'var(--text-primary)',
+                    padding: '0.2rem 0.4rem',
+                    outline: 'none'
+                  }}
+                />
+                <button 
+                  onClick={() => changeDateByDays(1)} 
+                  style={{ background: 'transparent', border: 'none', padding: '0.3rem', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                  title="Next Day"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+
+              {/* Today jump pill */}
               <button 
-                onClick={() => changeDateByDays(-1)} 
-                style={{ background: 'transparent', border: 'none', padding: '0.3rem', cursor: 'pointer', color: 'var(--text-secondary)' }}
-                title="Previous Day"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <input 
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                style={{ 
-                  border: 'none', 
-                  background: 'transparent', 
-                  fontWeight: 700, 
-                  fontSize: '0.85rem', 
-                  color: 'var(--text-primary)',
-                  padding: '0.2rem 0.4rem',
-                  outline: 'none'
+                onClick={jumpToToday}
+                style={{
+                  padding: '0.4rem 0.75rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-light)',
+                  background: 'var(--bg-surface-elevated)',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  color: 'var(--primary)',
+                  cursor: 'pointer'
                 }}
-              />
-              <button 
-                onClick={() => changeDateByDays(1)} 
-                style={{ background: 'transparent', border: 'none', padding: '0.3rem', cursor: 'pointer', color: 'var(--text-secondary)' }}
-                title="Next Day"
               >
-                <ChevronRight size={16} />
+                Today
               </button>
             </div>
-
-            {/* Today jump pill */}
-            <button 
-              onClick={jumpToToday}
-              style={{
-                padding: '0.4rem 0.75rem',
-                borderRadius: '8px',
-                border: '1px solid var(--border-light)',
-                background: 'var(--bg-surface-elevated)',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                color: 'var(--primary)',
-                cursor: 'pointer'
-              }}
-            >
-              Today
-            </button>
 
             {/* Class Selector Dropdown */}
             <select 
               className="form-select"
-              style={{ width: 'auto', padding: '0.45rem 0.85rem', fontWeight: 700, fontSize: '0.85rem' }}
+              style={{ width: 'auto', padding: '0.45rem 0.85rem', fontWeight: 700, fontSize: '0.85rem', borderRadius: '8px' }}
               value={selectedClassId}
               onChange={(e) => setSelectedClassId(e.target.value)}
             >
@@ -378,10 +360,10 @@ export default function AttendanceTracker() {
             </select>
           </div>
 
-          {/* Right: 1-Click Fill Batch Buttons */}
-          <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+          {/* Right: 1-Click Fill Batch Buttons in ONE line */}
+          <div className="attendance-batch-actions">
             <button 
-              onClick={() => markAll('Present')}
+              onClick={() => setConfirmStatus('Present')}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -400,7 +382,7 @@ export default function AttendanceTracker() {
               <span>All Present</span>
             </button>
             <button 
-              onClick={() => markAll('Absent')}
+              onClick={() => setConfirmStatus('Absent')}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -419,7 +401,7 @@ export default function AttendanceTracker() {
               <span>All Absent</span>
             </button>
             <button 
-              onClick={() => markAll('Late')}
+              onClick={() => setConfirmStatus('Late')}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -442,12 +424,12 @@ export default function AttendanceTracker() {
 
         {/* Filter Pills & Instant Search */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.65rem', borderTop: '1px solid #f1f5f9', paddingTop: '0.75rem' }}>
-          {/* Quick Filter Chips */}
-          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+          {/* Quick Filter Chips in ONE line */}
+          <div className="attendance-filter-chips">
             <button
               onClick={() => setActiveFilter('all')}
               style={{
-                padding: '0.35rem 0.75rem',
+                padding: '0.38rem 0.65rem',
                 borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
@@ -462,7 +444,7 @@ export default function AttendanceTracker() {
             <button
               onClick={() => setActiveFilter('Present')}
               style={{
-                padding: '0.35rem 0.75rem',
+                padding: '0.38rem 0.65rem',
                 borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
@@ -477,7 +459,7 @@ export default function AttendanceTracker() {
             <button
               onClick={() => setActiveFilter('Absent')}
               style={{
-                padding: '0.35rem 0.75rem',
+                padding: '0.38rem 0.65rem',
                 borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
@@ -492,7 +474,7 @@ export default function AttendanceTracker() {
             <button
               onClick={() => setActiveFilter('Late')}
               style={{
-                padding: '0.35rem 0.75rem',
+                padding: '0.38rem 0.65rem',
                 borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
@@ -507,7 +489,7 @@ export default function AttendanceTracker() {
           </div>
 
           {/* Quick Search */}
-          <div style={{ position: 'relative', width: '220px' }}>
+          <div className="attendance-search-bar">
             <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
             <input 
               type="text"
@@ -828,6 +810,84 @@ export default function AttendanceTracker() {
           )}
         </div>
       </div>
+
+      {/* Reconfirm Bulk Action Modal */}
+      {confirmStatus && (
+        <Modal
+          isOpen={Boolean(confirmStatus)}
+          onClose={() => setConfirmStatus(null)}
+          title={`Confirm Bulk Mark: All ${confirmStatus}`}
+          subtitle={`Class register bulk update`}
+          maxWidth="440px"
+          footer={
+            <div style={{ display: 'flex', gap: '0.65rem', justifyContent: 'flex-end', width: '100%' }}>
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={() => setConfirmStatus(null)}
+                style={{ borderRadius: '6px', padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn"
+                onClick={() => {
+                  markAll(confirmStatus);
+                  setConfirmStatus(null);
+                }}
+                style={{ 
+                  borderRadius: '6px', 
+                  padding: '0.5rem 1.15rem', 
+                  fontSize: '0.85rem',
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  background: confirmStatus === 'Present' ? '#10b981' : confirmStatus === 'Absent' ? '#ef4444' : '#f59e0b',
+                  border: 'none',
+                  boxShadow: confirmStatus === 'Present' ? '0 2px 8px rgba(16, 185, 129, 0.35)' : confirmStatus === 'Absent' ? '0 2px 8px rgba(239, 68, 68, 0.35)' : '0 2px 8px rgba(245, 158, 11, 0.35)'
+                }}
+              >
+                Yes, Mark All {confirmStatus}
+              </button>
+            </div>
+          }
+        >
+          <div style={{ padding: '0.5rem 0' }}>
+            <div style={{ 
+              padding: '1rem', 
+              borderRadius: '8px', 
+              background: confirmStatus === 'Present' ? '#ecfdf5' : confirmStatus === 'Absent' ? '#fef2f2' : '#fffbeb', 
+              border: `1px solid ${confirmStatus === 'Present' ? '#a7f3d0' : confirmStatus === 'Absent' ? '#fecaca' : '#fde68a'}`,
+              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem'
+            }}>
+              {confirmStatus === 'Present' && <CheckCircle2 size={24} color="#10b981" />}
+              {confirmStatus === 'Absent' && <XCircle size={24} color="#ef4444" />}
+              {confirmStatus === 'Late' && <Clock size={24} color="#f59e0b" />}
+              <div>
+                <div style={{ 
+                  fontWeight: 800, 
+                  fontSize: '0.92rem', 
+                  color: confirmStatus === 'Present' ? '#047857' : confirmStatus === 'Absent' ? '#b91c1c' : '#b45309' 
+                }}>
+                  Mark all {classStudents.length} students as {confirmStatus}?
+                </div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                  This will change the attendance status for every student in this section.
+                </div>
+              </div>
+            </div>
+
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+              <div>• <b>Class:</b> {classes.find(c => c.id === selectedClassId)?.grade} - Section {classes.find(c => c.id === selectedClassId)?.section} ({classes.find(c => c.id === selectedClassId)?.teacher})</div>
+              <div>• <b>Date:</b> {selectedDate}</div>
+              <div>• <b>Affected Roster:</b> {classStudents.length} Students</div>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

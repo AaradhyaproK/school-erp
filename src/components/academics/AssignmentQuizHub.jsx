@@ -893,7 +893,7 @@ export default function AssignmentQuizHub() {
                         display: 'flex', 
                         flexDirection: 'column', 
                         justifyContent: 'space-between',
-                        borderLeft: `4px solid ${asg.type === 'quiz' ? 'var(--primary)' : 'var(--secondary)'}`
+                        border: '1px solid var(--border-light)'
                       }}
                     >
                       <div>
@@ -1187,7 +1187,7 @@ export default function AssignmentQuizHub() {
               </div>
             </div>
 
-            <div className="glass-panel" style={{ padding: '1.25rem', borderLeft: '4px solid var(--danger)' }}>
+            <div className="glass-panel" style={{ padding: '1.25rem', border: '1px solid var(--border-light)' }}>
               <div style={{ fontSize: '0.8rem', color: 'var(--danger)', fontWeight: 600 }}>Tests Not Given Yet</div>
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--danger)', marginTop: '0.3rem' }}>
                 {studentNotGivenTasks.length} Pending
@@ -1197,7 +1197,7 @@ export default function AssignmentQuizHub() {
               </div>
             </div>
 
-            <div className="glass-panel" style={{ padding: '1.25rem', borderLeft: '4px solid var(--warning)' }}>
+            <div className="glass-panel" style={{ padding: '1.25rem', border: '1px solid var(--border-light)' }}>
               <div style={{ fontSize: '0.8rem', color: '#b45309', fontWeight: 600 }}>Given & Under Teacher Check</div>
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#b45309', marginTop: '0.3rem' }}>
                 {studentUnderCheckingTasks.length} In Review
@@ -1207,7 +1207,7 @@ export default function AssignmentQuizHub() {
               </div>
             </div>
 
-            <div className="glass-panel" style={{ padding: '1.25rem', borderLeft: '4px solid var(--success)' }}>
+            <div className="glass-panel" style={{ padding: '1.25rem', border: '1px solid var(--border-light)' }}>
               <div style={{ fontSize: '0.8rem', color: 'var(--success)', fontWeight: 600 }}>Checked & Graded Tests</div>
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--success)', marginTop: '0.3rem' }}>
                 {studentCheckedTasks.length} Evaluated
