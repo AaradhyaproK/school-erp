@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useERP } from '../../context/ERPContext';
 import DedicatedQuizPortal from './DedicatedQuizPortal';
+import { generateQuizQuestionsWithAI } from '../../services/geminiQuizService';
+import { extractTextFromFile } from '../../utils/fileTextExtractor';
 import { 
   BookOpen, 
   HelpCircle, 
@@ -25,8 +27,138 @@ import {
   Calendar,
   Layers,
   CheckSquare,
-  Trash2
+  Trash2,
+  Bot,
+  Wand2,
+  Loader2,
+  UploadCloud,
+  FileUp,
+  FileType,
+  Languages,
+  Target,
+  GraduationCap,
+  FileCheck,
+  SlidersHorizontal,
+  Paperclip
 } from 'lucide-react';
+
+const CBSE_SUBJECT_PRESETS = [
+  'Mathematics',
+  'Science',
+  'Science (Physics)',
+  'Science (Chemistry)',
+  'Science (Biology)',
+  'Computer Science & IT',
+  'Social Science (History & Civics)',
+  'Social Science (Geography & Economics)',
+  'English (Language & Literature)',
+  'Hindi (Course A/B)',
+  'Economics & Commerce'
+];
+
+const CBSE_TOPIC_PRESETS = {
+  'Mathematics': [
+    'Real Numbers & Polynomials',
+    'Quadratic Equations',
+    'Arithmetic Progressions',
+    'Coordinate Geometry & Lines',
+    'Introduction to Trigonometry',
+    'Applications of Trigonometry',
+    'Circles & Tangents',
+    'Surface Areas & Volumes',
+    'Statistics & Central Tendency',
+    'Probability & Sample Space'
+  ],
+  'Science': [
+    'Chemical Reactions & Equations',
+    'Acids, Bases & Salts',
+    'Metals & Non-metals',
+    'Carbon & its Compounds',
+    'Life Processes & Nutrition',
+    'Control & Coordination',
+    'How do Organisms Reproduce?',
+    'Heredity & Evolution',
+    'Light: Reflection & Refraction',
+    'Electricity & Ohm\'s Law',
+    'Magnetic Effects of Current',
+    'Our Environment & Ecosystem'
+  ],
+  'Science (Physics)': [
+    'Light: Reflection & Refraction',
+    'Human Eye & Colourful World',
+    'Electricity & Ohm\'s Law',
+    'Heating Effects of Current',
+    'Magnetic Effects & Solenoid',
+    'Sources of Energy'
+  ],
+  'Science (Chemistry)': [
+    'Chemical Reactions & Types',
+    'Acids, Bases & Indicators',
+    'Metals & Reactivity Series',
+    'Carbon Compounds & Bonding',
+    'Periodic Classification Concepts'
+  ],
+  'Science (Biology)': [
+    'Life Processes (Nutrition & Respiration)',
+    'Transportation & Excretion in Humans',
+    'Control & Nervous Coordination',
+    'Reproduction in Flowering Plants',
+    'Heredity & Mendelian Genetics',
+    'Ecosystem & Food Chains'
+  ],
+  'Computer Science & IT': [
+    'Python Basics & Syntax',
+    'Conditional Statements & Loops',
+    'Strings, Lists & Dictionaries',
+    'Functions & Scope in Python',
+    'SQL Queries & SELECT Statements',
+    'Relational Database Keys & Tables',
+    'Computer Networks & Protocols',
+    'Cyber Safety & Digital Ethics'
+  ],
+  'Social Science (History & Civics)': [
+    'The Rise of Nationalism in Europe',
+    'Nationalism in India & Movements',
+    'Making of a Global World',
+    'Power Sharing in Democracy',
+    'Federalism in India',
+    'Gender, Religion and Caste',
+    'Political Parties & Functions'
+  ],
+  'Social Science (Geography & Economics)': [
+    'Resources and Development',
+    'Forest and Wildlife Resources',
+    'Water Resources & Multipurpose Projects',
+    'Agriculture & Major Crops of India',
+    'Minerals and Energy Resources',
+    'Development & Per Capita Income',
+    'Sectors of the Indian Economy',
+    'Money and Credit & Banking'
+  ],
+  'English (Language & Literature)': [
+    'Reading Comprehension & Inferences',
+    'Tenses & Subject-Verb Agreement',
+    'Modals & Determiners',
+    'Reported Speech & Dialogue Writing',
+    'Poetic Devices & Figures of Speech',
+    'Vocabulary, Synonyms & Antonyms'
+  ],
+  'Hindi (Course A/B)': [
+    'संधि और उसके भेद',
+    'समास और विग्रह',
+    'मुहावरे और लोकोक्तियाँ',
+    'वाक्य रूपांतरण (सरल, संयुक्त, मिश्र)',
+    'पद परिचय',
+    'अपठित गद्यांश व काव्यांश'
+  ],
+  'Economics & Commerce': [
+    'Development Goals & Indicators',
+    'Organized vs Unorganized Sectors',
+    'Formal & Informal Credit Sources',
+    'Globalisation & MNC Operations',
+    'Consumer Rights & COPRA'
+  ]
+};
 
 export default function AssignmentQuizHub() {
   const { 
@@ -103,6 +235,26 @@ export default function AssignmentQuizHub() {
       hint: ''
     }
   ]);
+
+  // Gemini AI Question Studio State
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiSubject, setAiSubject] = useState('Science');
+  const [aiClass, setAiClass] = useState('Class 10-A');
+  const [aiTopic, setAiTopic] = useState('');
+  const [aiNumQuestions, setAiNumQuestions] = useState(5);
+  const [aiDifficulty, setAiDifficulty] = useState('Medium'); // 'Easy' | 'Medium' | 'Hard' | 'Competitive'
+  const [aiQuestionStyle, setAiQuestionStyle] = useState('balanced'); // 'balanced' | 'assertion_reason' | 'numerical' | 'conceptual' | 'case_study'
+  const [aiLanguage, setAiLanguage] = useState('English'); // 'English' | 'Hindi' | 'Bilingual'
+  const [aiMarkingScheme, setAiMarkingScheme] = useState('+5 / -0'); // '+5 / -0' | '+4 / -1' | '+1 / -0'
+  const [aiBloomLevel, setAiBloomLevel] = useState('balanced'); // 'balanced' | 'recall' | 'analytical'
+  const [aiUseNotesOnly, setAiUseNotesOnly] = useState(false);
+  const [aiNotesText, setAiNotesText] = useState('');
+  const [aiUploadedFile, setAiUploadedFile] = useState(null);
+  const [aiIsReadingFile, setAiIsReadingFile] = useState(false);
+  const [aiShowNotesPreview, setAiShowNotesPreview] = useState(false);
+  const [aiIsGenerating, setAiIsGenerating] = useState(false);
+  const [aiError, setAiError] = useState(null);
+  const [aiGeneratedQuestions, setAiGeneratedQuestions] = useState(null);
 
   // Grading Drawer State for Teacher
   const [gradingModalOpen, setGradingModalOpen] = useState(false);
@@ -279,6 +431,114 @@ export default function AssignmentQuizHub() {
         hint: 'Energy is released in the form of ATP during respiration.'
       }
     ]);
+  };
+
+  const handleOpenAiStudio = () => {
+    setAiSubject(newSubject || 'Science');
+    setAiClass(newClass || 'Class 10-A');
+    setAiTopic(newTitle || '');
+    setAiError(null);
+    setAiGeneratedQuestions(null);
+    setAiModalOpen(true);
+  };
+
+  const handleNotesFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAiIsReadingFile(true);
+    setAiError(null);
+    try {
+      const result = await extractTextFromFile(file);
+      if (!result.text || result.text.trim().length === 0) {
+        throw new Error('No readable text could be extracted from this file. Please ensure it contains selectable text.');
+      }
+      setAiUploadedFile(result.fileInfo);
+      setAiNotesText(result.text);
+      setAiUseNotesOnly(true);
+      showToast(`Loaded "${result.fileInfo.name}" (${(result.fileInfo.size / 1024).toFixed(1)} KB${result.fileInfo.pageCount ? `, ${result.fileInfo.pageCount} pages` : ''})!`, 'success');
+    } catch (err) {
+      console.error('Notes File Extract Error:', err);
+      setAiError(err.message || 'Failed to read uploaded file');
+      showToast('File read error: ' + err.message, 'error');
+    } finally {
+      setAiIsReadingFile(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveUploadedNotes = () => {
+    setAiUploadedFile(null);
+    setAiNotesText('');
+    setAiUseNotesOnly(false);
+    showToast('Uploaded notes removed', 'info');
+  };
+
+  const handleGenerateAiQuestions = async () => {
+    if (!aiTopic.trim() && (!aiUseNotesOnly || !aiNotesText.trim())) {
+      showToast('Please specify a Topic or provide/upload Notes for AI question generation.', 'warning');
+      return;
+    }
+
+    setAiIsGenerating(true);
+    setAiError(null);
+    setAiGeneratedQuestions(null);
+
+    try {
+      const generated = await generateQuizQuestionsWithAI({
+        topic: aiTopic.trim(),
+        numQuestions: Number(aiNumQuestions) || 5,
+        difficulty: aiDifficulty,
+        subject: aiSubject || newSubject || 'Science',
+        className: aiClass || newClass || 'Class 10',
+        notes: aiUseNotesOnly ? aiNotesText : '',
+        questionStyle: aiQuestionStyle,
+        language: aiLanguage,
+        markingScheme: aiMarkingScheme,
+        bloomLevel: aiBloomLevel
+      });
+
+      setAiGeneratedQuestions(generated);
+      showToast(`Gemini AI successfully formulated ${generated.length} questions!`, 'success');
+    } catch (err) {
+      console.error('AI Question Generation Error:', err);
+      setAiError(err.message || 'Failed to generate questions. Please try again.');
+      showToast('AI Error: ' + err.message, 'error');
+    } finally {
+      setAiIsGenerating(false);
+    }
+  };
+
+  const handleApplyAiQuestions = (mode = 'replace') => {
+    if (!aiGeneratedQuestions || aiGeneratedQuestions.length === 0) return;
+
+    const formatted = aiGeneratedQuestions.map((q, idx) => ({
+      id: `q_ai_${Date.now()}_${idx}`,
+      prompt: q.prompt,
+      options: q.options,
+      correctIndex: q.correctIndex,
+      marks: Number(q.marks) || 5,
+      hint: q.explanation || ''
+    }));
+
+    if (mode === 'replace') {
+      setNewQuestions(formatted);
+      const totalM = formatted.reduce((sum, q) => sum + q.marks, 0);
+      setNewTotalMarks(totalM);
+    } else {
+      setNewQuestions(prev => {
+        if (prev.length === 1 && !prev[0].prompt) {
+          return formatted;
+        }
+        return [...prev, ...formatted];
+      });
+      const totalM = formatted.reduce((sum, q) => sum + q.marks, 0);
+      setNewTotalMarks(prev => prev + totalM);
+    }
+
+    setAiModalOpen(false);
+    setAiGeneratedQuestions(null);
+    showToast(`Added ${formatted.length} questions to your quiz!`, 'success');
   };
 
   const handleCreateAssignmentSubmit = (e) => {
@@ -2337,7 +2597,61 @@ export default function AssignmentQuizHub() {
               {/* Dynamic MCQ Builder (if type === 'quiz') */}
               {newType === 'quiz' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '0.5rem', borderTop: '1px solid var(--border-light)', paddingTop: '1.25rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  {/* AI Quick Assistant Banner */}
+                  <div 
+                    style={{
+                      background: 'linear-gradient(135deg, #eef2ff 0%, #faf5ff 100%)',
+                      border: '1.5px solid #c7d2fe',
+                      borderRadius: '10px',
+                      padding: '0.95rem 1.15rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '0.85rem',
+                      boxShadow: '0 2px 8px rgba(99, 102, 241, 0.08)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: '240px', flex: 1 }}>
+                      <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 6px rgba(79, 70, 229, 0.3)' }}>
+                        <Sparkles size={20} />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#1e1b4b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <span>Gemini AI Question Generator</span>
+                          <span style={{ fontSize: '0.68rem', background: '#e0e7ff', color: '#3730a3', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: 800, textTransform: 'uppercase' }}>
+                            Flash AI
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '0.76rem', color: '#4338ca', marginTop: '0.15rem', lineHeight: 1.4 }}>
+                          Auto-generate curriculum-aligned MCQs by difficulty, topic, or strictly grounded in your own lecture notes / textbook text.
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleOpenAiStudio}
+                      style={{
+                        padding: '0.5rem 1.15rem',
+                        fontSize: '0.82rem',
+                        fontWeight: 800,
+                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        boxShadow: '0 2px 8px rgba(79, 70, 229, 0.35)'
+                      }}
+                    >
+                      <Wand2 size={14} />
+                      <span>Launch AI Question Studio</span>
+                    </button>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.65rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                       <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                         MCQ Questions ({newQuestions.length})
@@ -2346,15 +2660,40 @@ export default function AssignmentQuizHub() {
                         Total: {newQuestions.reduce((sum, q) => sum + (Number(q.marks) || 0), 0)} Marks
                       </span>
                     </div>
-                    <button 
-                      type="button" 
-                      className="btn btn-primary" 
-                      style={{ fontSize: '0.82rem', padding: '0.4rem 0.85rem' }}
-                      onClick={addQuestionField}
-                    >
-                      <Plus size={15} />
-                      <span>Add Question</span>
-                    </button>
+
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <button 
+                        type="button" 
+                        className="btn" 
+                        style={{ 
+                          fontSize: '0.82rem', 
+                          padding: '0.4rem 0.85rem',
+                          background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                          color: '#ffffff',
+                          border: 'none',
+                          boxShadow: '0 2px 6px rgba(99, 102, 241, 0.3)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          fontWeight: 700,
+                          borderRadius: '6px'
+                        }}
+                        onClick={handleOpenAiStudio}
+                      >
+                        <Sparkles size={14} />
+                        <span>Generate with AI</span>
+                      </button>
+
+                      <button 
+                        type="button" 
+                        className="btn btn-secondary" 
+                        style={{ fontSize: '0.82rem', padding: '0.4rem 0.85rem', borderRadius: '6px' }}
+                        onClick={addQuestionField}
+                      >
+                        <Plus size={14} />
+                        <span>Add Manually</span>
+                      </button>
+                    </div>
                   </div>
 
                   {newQuestions.map((q, qIdx) => (
@@ -2548,6 +2887,682 @@ export default function AssignmentQuizHub() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 8. MODAL: GEMINI AI QUESTION STUDIO (AI MCQ GENERATOR)                    */}
+      {/* ========================================================================= */}
+      {aiModalOpen && (
+        <div 
+          style={{ 
+            position: 'fixed', 
+            top: 0, 
+            left: 0, 
+            right: 0, 
+            bottom: 0, 
+            background: 'rgba(15, 23, 42, 0.75)', 
+            backdropFilter: 'blur(8px)', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            zIndex: 1100, 
+            padding: '1rem' 
+          }}
+        >
+          <div 
+            className="glass-panel" 
+            style={{ 
+              width: '100%', 
+              maxWidth: '880px', 
+              maxHeight: '92vh', 
+              overflowY: 'auto', 
+              padding: '1.75rem 2rem', 
+              background: '#ffffff',
+              borderRadius: '12px',
+              boxShadow: '0 25px 50px -12px rgba(99, 102, 241, 0.25)',
+              border: '1px solid #cbd5e1'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #e2e8f0', paddingBottom: '1.25rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.35)', flexShrink: 0 }}>
+                  <Sparkles size={22} />
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                      Gemini AI Question Studio
+                    </h2>
+                    <span style={{ fontSize: '0.7rem', background: '#e0e7ff', color: '#3730a3', padding: '0.15rem 0.5rem', borderRadius: '6px', fontWeight: 800, textTransform: 'uppercase' }}>
+                      Official Google Gemini
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0.25rem 0 0' }}>
+                    Generate CBSE-aligned multiple choice questions by topic, difficulty, or strictly from your personal lesson notes.
+                  </p>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => {
+                  setAiModalOpen(false);
+                  setAiGeneratedQuestions(null);
+                  setAiError(null);
+                }}
+                style={{ background: '#f1f5f9', border: 'none', borderRadius: '6px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#475569' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* If Not Generated Yet (Config Form) */}
+            {!aiGeneratedQuestions && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                {/* Row 1: Academic Scope (Subject & Class) */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <BookOpen size={14} color="#6366f1" />
+                      <span>Curriculum Subject</span>
+                    </label>
+                    <select
+                      value={aiSubject}
+                      onChange={(e) => setAiSubject(e.target.value)}
+                      className="form-select"
+                      style={{ fontSize: '0.88rem', padding: '0.6rem 0.75rem', borderRadius: '8px' }}
+                    >
+                      {CBSE_SUBJECT_PRESETS.map((sub) => (
+                        <option key={sub} value={sub}>{sub}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <GraduationCap size={14} color="#6366f1" />
+                      <span>Target Grade / Class</span>
+                    </label>
+                    <select
+                      value={aiClass}
+                      onChange={(e) => setAiClass(e.target.value)}
+                      className="form-select"
+                      style={{ fontSize: '0.88rem', padding: '0.6rem 0.75rem', borderRadius: '8px' }}
+                    >
+                      {classes.length > 0 ? (
+                        classes.map((cls) => (
+                          <option key={cls.id || cls.name} value={cls.name}>{cls.name}</option>
+                        ))
+                      ) : (
+                        ['Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10-A', 'Class 10-B', 'Class 11', 'Class 12'].map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))
+                      )}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Row 2: Topic / Chapter Name with Dynamic CBSE Presets */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', margin: 0 }}>
+                      Topic / Unit / Chapter Name {!aiUseNotesOnly && <span style={{ color: 'var(--danger)' }}>*</span>}
+                    </label>
+                    <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                      Or select from recommended CBSE chapters below
+                    </span>
+                  </div>
+                  <input 
+                    type="text" 
+                    value={aiTopic} 
+                    onChange={(e) => setAiTopic(e.target.value)} 
+                    placeholder="e.g., Chemical Reactions & Equations, Quadratic Equations, Life Processes..." 
+                    className="form-input" 
+                    style={{ fontSize: '0.9rem', padding: '0.6rem 0.85rem', borderRadius: '8px' }}
+                  />
+
+                  {/* Topic Recommendation Chips */}
+                  {CBSE_TOPIC_PRESETS[aiSubject] && CBSE_TOPIC_PRESETS[aiSubject].length > 0 && (
+                    <div style={{ marginTop: '0.5rem' }}>
+                      <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, marginBottom: '0.35rem' }}>
+                        Suggested CBSE Chapters for {aiSubject}:
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                        {CBSE_TOPIC_PRESETS[aiSubject].map((topicItem) => {
+                          const isSelected = aiTopic.toLowerCase() === topicItem.toLowerCase();
+                          return (
+                            <button
+                              key={topicItem}
+                              type="button"
+                              onClick={() => setAiTopic(topicItem)}
+                              style={{
+                                padding: '0.25rem 0.65rem',
+                                borderRadius: '6px',
+                                fontSize: '0.74rem',
+                                fontWeight: 700,
+                                cursor: 'pointer',
+                                border: isSelected ? '1px solid #4f46e5' : '1px solid #e2e8f0',
+                                background: isSelected ? '#eef2ff' : '#f8fafc',
+                                color: isSelected ? '#3730a3' : '#475569',
+                                transition: 'all 0.15s ease'
+                              }}
+                            >
+                              {topicItem}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Row 3: Upload Notes in PDF and All Formats (Strict Grounding Section) */}
+                <div 
+                  style={{ 
+                    border: aiUseNotesOnly ? '2px solid #6366f1' : '1px solid #e2e8f0', 
+                    borderRadius: '10px', 
+                    padding: '1.15rem', 
+                    background: aiUseNotesOnly ? 'rgba(99, 102, 241, 0.03)' : '#f8fafc',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <UploadCloud size={18} color="#4f46e5" />
+                      <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>
+                        Lesson Notes & Textbook Upload
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 800, background: '#fee2e2', color: '#991b1b', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>PDF</span>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 800, background: '#e0e7ff', color: '#3730a3', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>DOCX</span>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 800, background: '#fef3c7', color: '#92400e', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>TXT</span>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 800, background: '#dcfce7', color: '#166534', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>MD</span>
+                    </div>
+                  </div>
+
+                  {/* Strict notes grounding toggle */}
+                  <label 
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-start', 
+                      gap: '0.65rem', 
+                      cursor: 'pointer',
+                      userSelect: 'none',
+                      padding: '0.5rem 0.75rem',
+                      background: '#ffffff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      marginBottom: '0.85rem'
+                    }}
+                  >
+                    <input 
+                      type="checkbox" 
+                      checked={aiUseNotesOnly} 
+                      onChange={(e) => setAiUseNotesOnly(e.target.checked)}
+                      style={{ width: '16px', height: '16px', accentColor: '#4f46e5', cursor: 'pointer', marginTop: '0.15rem' }}
+                    />
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: '0.86rem', color: '#0f172a' }}>
+                        Strictly Restrict to Uploaded Notes / Textbook Material
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: '#64748b', lineHeight: 1.35, marginTop: '0.1rem' }}>
+                        When enabled, Gemini is strictly forbidden from testing external concepts and will formulate questions <strong>ONLY</strong> from the uploaded document or text below.
+                      </div>
+                    </div>
+                  </label>
+
+                  {/* Hidden Native File Input */}
+                  <input
+                    type="file"
+                    id="ai-notes-file-input"
+                    accept=".pdf,.doc,.docx,.txt,.md,.markdown,.csv,.rtf,text/*,application/pdf"
+                    onChange={handleNotesFileUpload}
+                    style={{ display: 'none' }}
+                  />
+
+                  {/* Upload State / Dropzone */}
+                  {aiUploadedFile ? (
+                    <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#dcfce7', color: '#15803d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <FileCheck size={20} />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 800, fontSize: '0.86rem', color: '#166534' }}>
+                            {aiUploadedFile.name}
+                          </div>
+                          <div style={{ fontSize: '0.72rem', color: '#15803d' }}>
+                            {(aiUploadedFile.size / 1024).toFixed(1)} KB 
+                            {aiUploadedFile.pageCount ? ` • ${aiUploadedFile.pageCount} Pages` : ''} 
+                            {` • ${aiNotesText.length.toLocaleString()} characters extracted`}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <button
+                          type="button"
+                          onClick={() => setAiShowNotesPreview(!aiShowNotesPreview)}
+                          style={{
+                            padding: '0.35rem 0.65rem',
+                            borderRadius: '6px',
+                            border: '1px solid #cbd5e1',
+                            background: '#ffffff',
+                            color: '#334155',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {aiShowNotesPreview ? 'Hide Text Preview' : 'Preview Extracted Text'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleRemoveUploadedNotes}
+                          style={{
+                            padding: '0.35rem 0.65rem',
+                            borderRadius: '6px',
+                            border: '1px solid #fca5a5',
+                            background: '#fef2f2',
+                            color: '#b91c1c',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.25rem'
+                          }}
+                        >
+                          <Trash2 size={13} />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div 
+                      onClick={() => document.getElementById('ai-notes-file-input')?.click()}
+                      style={{
+                        border: '2px dashed #cbd5e1',
+                        borderRadius: '8px',
+                        padding: '1.1rem',
+                        textAlign: 'center',
+                        background: '#ffffff',
+                        cursor: aiIsReadingFile ? 'wait' : 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#6366f1'}
+                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#cbd5e1'}
+                    >
+                      {aiIsReadingFile ? (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#4f46e5', fontWeight: 700, fontSize: '0.86rem' }}>
+                          <Loader2 size={18} className="animate-spin" />
+                          <span>Extracting text from document via PDF.js...</span>
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem' }}>
+                          <FileUp size={24} color="#6366f1" />
+                          <div style={{ fontWeight: 800, fontSize: '0.86rem', color: '#1e293b' }}>
+                            Upload PDF, DOCX, TXT, or MD Notes
+                          </div>
+                          <div style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                            Click to browse or drop your lesson notes file here. Auto-parsed page-by-page.
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Extracted or Manual Textarea */}
+                  {(aiShowNotesPreview || (!aiUploadedFile && aiUseNotesOnly)) && (
+                    <div style={{ marginTop: '0.75rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                        <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#475569' }}>
+                          {aiUploadedFile ? 'Extracted Notes Content:' : 'Or Paste Lesson Notes Directly:'}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                          {aiNotesText.length} Characters • ~{Math.round(aiNotesText.trim().split(/\s+/).filter(Boolean).length)} Words
+                        </span>
+                      </div>
+                      <textarea
+                        rows={5}
+                        value={aiNotesText}
+                        onChange={(e) => setAiNotesText(e.target.value)}
+                        placeholder="Paste lecture notes, textbook definitions, formulas, or syllabus text here..."
+                        className="form-textarea"
+                        style={{ fontSize: '0.82rem', resize: 'vertical', background: '#ffffff', borderRadius: '8px' }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Row 4: Academic Rubric Grid (Format, Difficulty, Marking, Language, Bloom's, Question Count) */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                  {/* Question Format / Style */}
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.78rem' }}>
+                      Question Format / Style
+                    </label>
+                    <select
+                      value={aiQuestionStyle}
+                      onChange={(e) => setAiQuestionStyle(e.target.value)}
+                      className="form-select"
+                      style={{ fontSize: '0.82rem', padding: '0.45rem 0.65rem', borderRadius: '6px' }}
+                    >
+                      <option value="balanced">Balanced CBSE Standard</option>
+                      <option value="assertion_reason">Assertion & Reason (A&R CBSE)</option>
+                      <option value="numerical">Numerical & Problem-Solving</option>
+                      <option value="conceptual">Conceptual & Deep Theory</option>
+                      <option value="case_study">Case Study / Passage-Based</option>
+                    </select>
+                  </div>
+
+                  {/* Marking Scheme */}
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.78rem' }}>
+                      Marking Scheme
+                    </label>
+                    <select
+                      value={aiMarkingScheme}
+                      onChange={(e) => setAiMarkingScheme(e.target.value)}
+                      className="form-select"
+                      style={{ fontSize: '0.82rem', padding: '0.45rem 0.65rem', borderRadius: '6px' }}
+                    >
+                      <option value="+5 / -0">+5 / 0 Marks (Campus Standard)</option>
+                      <option value="+4 / -1">+4 / -1 Marks (Competitive / Negative)</option>
+                      <option value="+1 / -0">+1 / 0 Marks (1-Mark Objective)</option>
+                      <option value="+2 / -0">+2 / 0 Marks (2-Marks Conceptual)</option>
+                    </select>
+                  </div>
+
+                  {/* Medium / Language */}
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.78rem' }}>
+                      Language / Medium
+                    </label>
+                    <select
+                      value={aiLanguage}
+                      onChange={(e) => setAiLanguage(e.target.value)}
+                      className="form-select"
+                      style={{ fontSize: '0.82rem', padding: '0.45rem 0.65rem', borderRadius: '6px' }}
+                    >
+                      <option value="English">English Medium</option>
+                      <option value="Hindi">Hindi Medium (हिंदी)</option>
+                      <option value="Bilingual">Bilingual (English + Hindi)</option>
+                    </select>
+                  </div>
+
+                  {/* Cognitive Level (Bloom's Taxonomy) */}
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.78rem' }}>
+                      Bloom's Cognitive Level
+                    </label>
+                    <select
+                      value={aiBloomLevel}
+                      onChange={(e) => setAiBloomLevel(e.target.value)}
+                      className="form-select"
+                      style={{ fontSize: '0.82rem', padding: '0.45rem 0.65rem', borderRadius: '6px' }}
+                    >
+                      <option value="balanced">Balanced Cognitive Mix</option>
+                      <option value="recall">Knowledge & Direct Recall</option>
+                      <option value="analytical">Analytical & HOTS (High Order)</option>
+                    </select>
+                  </div>
+
+                  {/* Difficulty Level */}
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.78rem' }}>
+                      Academic Difficulty
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.3rem' }}>
+                      {[
+                        { key: 'Easy', label: 'Easy' },
+                        { key: 'Medium', label: 'Medium' },
+                        { key: 'Hard', label: 'Hard' },
+                        { key: 'Competitive', label: 'Olympiad' }
+                      ].map((diff) => (
+                        <button
+                          key={diff.key}
+                          type="button"
+                          onClick={() => setAiDifficulty(diff.key)}
+                          style={{
+                            padding: '0.45rem 0.2rem',
+                            borderRadius: '6px',
+                            border: aiDifficulty === diff.key ? '2px solid #6366f1' : '1px solid #cbd5e1',
+                            background: aiDifficulty === diff.key ? '#eef2ff' : '#ffffff',
+                            color: aiDifficulty === diff.key ? '#4338ca' : '#475569',
+                            fontWeight: 800,
+                            fontSize: '0.72rem',
+                            cursor: 'pointer',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {diff.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Number of Questions */}
+                  <div>
+                    <label className="input-label" style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.78rem' }}>
+                      Questions to Formulate
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.3rem' }}>
+                      {[3, 5, 10, 15].map((num) => (
+                        <button
+                          key={num}
+                          type="button"
+                          onClick={() => setAiNumQuestions(num)}
+                          style={{
+                            padding: '0.45rem 0.2rem',
+                            borderRadius: '6px',
+                            border: aiNumQuestions === num ? '2px solid #6366f1' : '1px solid #cbd5e1',
+                            background: aiNumQuestions === num ? '#eef2ff' : '#ffffff',
+                            color: aiNumQuestions === num ? '#4338ca' : '#475569',
+                            fontWeight: 800,
+                            fontSize: '0.76rem',
+                            cursor: 'pointer',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {num} Qs
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Error Banner if any */}
+                {aiError && (
+                  <div style={{ padding: '0.85rem 1rem', borderRadius: '8px', background: '#fef2f2', border: '1.5px solid #fca5a5', color: '#b91c1c', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <AlertTriangle size={16} style={{ flexShrink: 0 }} />
+                    <span>{aiError}</span>
+                  </div>
+                )}
+
+                {/* Generate Action Button */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.25rem' }}>
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary" 
+                    onClick={() => setAiModalOpen(false)}
+                    disabled={aiIsGenerating}
+                  >
+                    Cancel
+                  </button>
+
+                  <button 
+                    type="button" 
+                    onClick={handleGenerateAiQuestions}
+                    disabled={aiIsGenerating || (!aiTopic.trim() && (!aiUseNotesOnly || !aiNotesText.trim()))}
+                    style={{
+                      padding: '0.65rem 1.4rem',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                      color: '#ffffff',
+                      fontWeight: 800,
+                      fontSize: '0.88rem',
+                      cursor: aiIsGenerating ? 'wait' : 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      boxShadow: '0 4px 14px rgba(79, 70, 229, 0.4)',
+                      opacity: (aiIsGenerating || (!aiTopic.trim() && (!aiUseNotesOnly || !aiNotesText.trim()))) ? 0.7 : 1
+                    }}
+                  >
+                    {aiIsGenerating ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />
+                        <span>Formulating Questions with Gemini AI...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={16} />
+                        <span>Generate {aiNumQuestions} Questions with Gemini</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Generated Questions Preview & Insertion Screen */}
+            {aiGeneratedQuestions && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '0.75rem 1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#166534', fontWeight: 800, fontSize: '0.88rem' }}>
+                    <CheckCircle2 size={18} color="#16a34a" />
+                    <span>Successfully Formulated {aiGeneratedQuestions.length} Questions</span>
+                  </div>
+                  <span style={{ fontSize: '0.76rem', color: '#15803d', fontWeight: 700 }}>
+                    Subject: {aiSubject} • Difficulty: {aiDifficulty} • Total Marks: {aiGeneratedQuestions.reduce((s, q) => s + (Number(q.marks) || 5), 0)}
+                  </span>
+                </div>
+
+                {/* Questions Preview List */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '55vh', overflowY: 'auto', paddingRight: '0.35rem' }}>
+                  {aiGeneratedQuestions.map((q, qIdx) => (
+                    <div 
+                      key={qIdx}
+                      style={{
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px',
+                        padding: '1rem 1.25rem'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '0.76rem', fontWeight: 800, background: '#0f172a', color: '#fff', padding: '0.2rem 0.55rem', borderRadius: '5px' }}>
+                          Question {qIdx + 1}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#059669', background: '#ecfdf5', padding: '0.15rem 0.45rem', borderRadius: '5px' }}>
+                          +{q.marks || 5} Marks
+                        </span>
+                      </div>
+
+                      <div style={{ fontSize: '0.94rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.5, marginBottom: '0.75rem' }}>
+                        {q.prompt}
+                      </div>
+
+                      {/* Options Grid */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.5rem' }}>
+                        {q.options.map((opt, optIdx) => {
+                          const isCorrect = q.correctIndex === optIdx;
+                          return (
+                            <div 
+                              key={optIdx}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                padding: '0.45rem 0.65rem',
+                                borderRadius: '6px',
+                                background: isCorrect ? '#ecfdf5' : '#ffffff',
+                                border: isCorrect ? '1.5px solid #10b981' : '1px solid #cbd5e1',
+                                fontSize: '0.82rem',
+                                color: isCorrect ? '#065f46' : '#334155',
+                                fontWeight: isCorrect ? 700 : 500
+                              }}
+                            >
+                              <span style={{ width: '20px', height: '20px', borderRadius: '4px', background: isCorrect ? '#10b981' : '#f1f5f9', color: isCorrect ? '#fff' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 800, flexShrink: 0 }}>
+                                {String.fromCharCode(65 + optIdx)}
+                              </span>
+                              <span style={{ flex: 1 }}>{opt}</span>
+                              {isCorrect && <CheckCircle2 size={14} color="#10b981" />}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {q.explanation && (
+                        <div style={{ marginTop: '0.65rem', fontSize: '0.76rem', color: '#64748b', background: '#ffffff', padding: '0.45rem 0.65rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                          <strong>Explanation / NCERT Reference:</strong> {q.explanation}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Insertion Action Buttons */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.25rem' }}>
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary" 
+                    onClick={() => setAiGeneratedQuestions(null)}
+                    style={{ fontSize: '0.84rem' }}
+                  >
+                    ← Back to Configure
+                  </button>
+
+                  <div style={{ display: 'flex', gap: '0.65rem' }}>
+                    {newQuestions.length > 0 && newQuestions[0].prompt && (
+                      <button 
+                        type="button" 
+                        onClick={() => handleApplyAiQuestions('append')}
+                        style={{
+                          padding: '0.6rem 1.15rem',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          background: '#ffffff',
+                          color: '#334155',
+                          fontWeight: 700,
+                          fontSize: '0.84rem',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Append to Existing Questions
+                      </button>
+                    )}
+
+                    <button 
+                      type="button" 
+                      onClick={() => handleApplyAiQuestions('replace')}
+                      style={{
+                        padding: '0.6rem 1.35rem',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        color: '#ffffff',
+                        fontWeight: 800,
+                        fontSize: '0.86rem',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
+                      }}
+                    >
+                      <Check size={16} />
+                      <span>Use These Questions in Quiz</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
