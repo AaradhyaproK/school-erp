@@ -150,22 +150,22 @@ export default function AttendanceTracker() {
         </div>
 
         <div className="mobile-stats-grid">
-          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', borderLeft: '4px solid var(--success)' }}>
+          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', border: '1px solid #e2e8f0', borderRadius: '10px' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800 }}>Presence Rate</span>
             <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--success)', marginTop: '0.2rem' }}>{student.attendanceRate || 96.5}%</h3>
             <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Above CBSE 75% standard</p>
           </div>
-          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', borderLeft: '4px solid var(--primary)' }}>
+          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', border: '1px solid #e2e8f0', borderRadius: '10px' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800 }}>Total Working Days</span>
             <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.2rem' }}>142 Days</h3>
             <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Academic Term 1 & 2</p>
           </div>
-          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', borderLeft: '4px solid var(--secondary)' }}>
+          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', border: '1px solid #e2e8f0', borderRadius: '10px' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800 }}>Days Present</span>
             <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--secondary)', marginTop: '0.2rem' }}>137 Days</h3>
             <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Exemplary regularity</p>
           </div>
-          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', borderLeft: '4px solid var(--danger)' }}>
+          <div className="glass-panel" style={{ padding: '1.15rem 1.25rem', border: '1px solid #e2e8f0', borderRadius: '10px' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800 }}>Absences</span>
             <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--danger)', marginTop: '0.2rem' }}>2 Days</h3>
             <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Excused leaves: 3</p>
@@ -387,7 +387,7 @@ export default function AttendanceTracker() {
                 alignItems: 'center',
                 gap: '0.35rem',
                 padding: '0.45rem 0.85rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 fontSize: '0.78rem',
                 fontWeight: 800,
                 background: '#ecfdf5',
@@ -406,7 +406,7 @@ export default function AttendanceTracker() {
                 alignItems: 'center',
                 gap: '0.35rem',
                 padding: '0.45rem 0.85rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 fontSize: '0.78rem',
                 fontWeight: 800,
                 background: '#fef2f2',
@@ -425,7 +425,7 @@ export default function AttendanceTracker() {
                 alignItems: 'center',
                 gap: '0.35rem',
                 padding: '0.45rem 0.85rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 fontSize: '0.78rem',
                 fontWeight: 800,
                 background: '#fffbeb',
@@ -448,7 +448,7 @@ export default function AttendanceTracker() {
               onClick={() => setActiveFilter('all')}
               style={{
                 padding: '0.35rem 0.75rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
                 border: activeFilter === 'all' ? 'none' : '1px solid #e2e8f0',
@@ -463,7 +463,7 @@ export default function AttendanceTracker() {
               onClick={() => setActiveFilter('Present')}
               style={{
                 padding: '0.35rem 0.75rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
                 border: activeFilter === 'Present' ? 'none' : '1px solid #e2e8f0',
@@ -478,7 +478,7 @@ export default function AttendanceTracker() {
               onClick={() => setActiveFilter('Absent')}
               style={{
                 padding: '0.35rem 0.75rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
                 border: activeFilter === 'Absent' ? 'none' : '1px solid #e2e8f0',
@@ -493,7 +493,7 @@ export default function AttendanceTracker() {
               onClick={() => setActiveFilter('Late')}
               style={{
                 padding: '0.35rem 0.75rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 fontSize: '0.76rem',
                 fontWeight: 700,
                 border: activeFilter === 'Late' ? 'none' : '1px solid #e2e8f0',
@@ -517,7 +517,7 @@ export default function AttendanceTracker() {
               style={{
                 width: '100%',
                 padding: '0.38rem 0.75rem 0.38rem 2rem',
-                borderRadius: 'var(--radius-full)',
+                borderRadius: '6px',
                 border: '1px solid var(--border-light)',
                 background: '#ffffff',
                 fontSize: '0.8rem',
@@ -555,8 +555,7 @@ export default function AttendanceTracker() {
                     <tr 
                       key={student.id}
                       style={{
-                        background: currentStatus === 'Absent' ? 'rgba(239, 68, 68, 0.04)' : 'inherit',
-                        borderLeft: currentStatus === 'Absent' ? '3px solid #ef4444' : 'none'
+                        background: currentStatus === 'Absent' ? 'rgba(239, 68, 68, 0.03)' : 'inherit'
                       }}
                     >
                       <td style={{ fontWeight: 800, color: 'var(--text-muted)' }}>
@@ -596,7 +595,7 @@ export default function AttendanceTracker() {
                             display: 'inline-flex', 
                             background: '#f1f5f9', 
                             padding: '3px', 
-                            borderRadius: 'var(--radius-full)',
+                            borderRadius: '8px',
                             border: '1px solid #e2e8f0'
                           }}
                         >
@@ -604,7 +603,7 @@ export default function AttendanceTracker() {
                             onClick={() => handleStatusChange(student.id, 'Present')}
                             style={{
                               padding: '0.35rem 0.95rem',
-                              borderRadius: 'var(--radius-full)',
+                              borderRadius: '6px',
                               fontSize: '0.78rem',
                               fontWeight: 800,
                               border: 'none',
@@ -622,7 +621,7 @@ export default function AttendanceTracker() {
                             onClick={() => handleStatusChange(student.id, 'Late')}
                             style={{
                               padding: '0.35rem 0.95rem',
-                              borderRadius: 'var(--radius-full)',
+                              borderRadius: '6px',
                               fontSize: '0.78rem',
                               fontWeight: 800,
                               border: 'none',
@@ -640,7 +639,7 @@ export default function AttendanceTracker() {
                             onClick={() => handleStatusChange(student.id, 'Absent')}
                             style={{
                               padding: '0.35rem 0.95rem',
-                              borderRadius: 'var(--radius-full)',
+                              borderRadius: '6px',
                               fontSize: '0.78rem',
                               fontWeight: 800,
                               border: 'none',
@@ -658,7 +657,7 @@ export default function AttendanceTracker() {
                             onClick={() => handleStatusChange(student.id, 'Excused')}
                             style={{
                               padding: '0.35rem 0.95rem',
-                              borderRadius: 'var(--radius-full)',
+                              borderRadius: '6px',
                               fontSize: '0.78rem',
                               fontWeight: 800,
                               border: 'none',
@@ -697,10 +696,10 @@ export default function AttendanceTracker() {
                   style={{
                     padding: '0.85rem 1rem',
                     marginBottom: '0.65rem',
-                    borderRadius: '14px',
-                    borderLeft: currentStatus === 'Present' ? '4px solid #10b981' :
-                                currentStatus === 'Absent' ? '4px solid #ef4444' :
-                                currentStatus === 'Late' ? '4px solid #f59e0b' : '4px solid #8b5cf6'
+                    borderRadius: '10px',
+                    border: '1px solid #e2e8f0',
+                    background: '#ffffff',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
                   }}
                 >
                   {/* Top info row */}
@@ -733,7 +732,7 @@ export default function AttendanceTracker() {
                         color: currentStatus === 'Present' ? '#047857' : currentStatus === 'Absent' ? '#b91c1c' : '#b45309',
                         background: currentStatus === 'Present' ? '#ecfdf5' : currentStatus === 'Absent' ? '#fef2f2' : '#fffbeb',
                         padding: '0.2rem 0.55rem',
-                        borderRadius: 'var(--radius-full)'
+                        borderRadius: '6px'
                       }}
                     >
                       {currentStatus}
@@ -748,14 +747,14 @@ export default function AttendanceTracker() {
                       gap: '4px',
                       background: '#f1f5f9', 
                       padding: '4px', 
-                      borderRadius: '12px' 
+                      borderRadius: '8px' 
                     }}
                   >
                     <button
                       onClick={() => handleStatusChange(student.id, 'Present')}
                       style={{
                         padding: '0.45rem 0',
-                        borderRadius: '9px',
+                        borderRadius: '6px',
                         fontSize: '0.78rem',
                         fontWeight: 800,
                         border: 'none',
@@ -773,7 +772,7 @@ export default function AttendanceTracker() {
                       onClick={() => handleStatusChange(student.id, 'Late')}
                       style={{
                         padding: '0.45rem 0',
-                        borderRadius: '9px',
+                        borderRadius: '6px',
                         fontSize: '0.78rem',
                         fontWeight: 800,
                         border: 'none',
@@ -791,7 +790,7 @@ export default function AttendanceTracker() {
                       onClick={() => handleStatusChange(student.id, 'Absent')}
                       style={{
                         padding: '0.45rem 0',
-                        borderRadius: '9px',
+                        borderRadius: '6px',
                         fontSize: '0.78rem',
                         fontWeight: 800,
                         border: 'none',
@@ -809,7 +808,7 @@ export default function AttendanceTracker() {
                       onClick={() => handleStatusChange(student.id, 'Excused')}
                       style={{
                         padding: '0.45rem 0',
-                        borderRadius: '9px',
+                        borderRadius: '6px',
                         fontSize: '0.78rem',
                         fontWeight: 800,
                         border: 'none',

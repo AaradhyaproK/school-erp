@@ -109,7 +109,7 @@ export default function Navbar() {
               alignItems: 'center',
               gap: '0.4rem',
               padding: '0.4rem 0.75rem',
-              borderRadius: 'var(--radius-full)',
+              borderRadius: '6px',
               fontSize: '0.78rem',
               fontWeight: 700,
               background: 'var(--bg-surface-elevated)',
@@ -132,7 +132,7 @@ export default function Navbar() {
               background: 'var(--bg-surface-elevated)',
               border: '1px solid var(--border-glass)',
               padding: '0.25rem',
-              borderRadius: 'var(--radius-full)'
+              borderRadius: '8px'
             }}
           >
             {roleConfigs.map((role) => {
@@ -150,7 +150,7 @@ export default function Navbar() {
                     alignItems: 'center',
                     gap: '0.4rem',
                     padding: '0.4rem 0.85rem',
-                    borderRadius: 'var(--radius-full)',
+                    borderRadius: '6px',
                     fontSize: '0.78rem',
                     fontWeight: 700,
                     transition: 'all var(--transition-fast)',

@@ -40,7 +40,8 @@ export default function StatsCard({ title, value, subtext, icon: Icon, trend, co
         justifyContent: 'space-between',
         position: 'relative',
         overflow: 'hidden',
-        borderLeft: `4px solid ${current.text}`
+        border: '1px solid #e2e8f0',
+        borderRadius: '10px'
       }}
     >
       <div style={{ zIndex: 1, minWidth: 0 }}>
@@ -60,7 +61,7 @@ export default function StatsCard({ title, value, subtext, icon: Icon, trend, co
               alignItems: 'center',
               background: trend.startsWith('+') ? 'var(--success-bg)' : 'var(--danger-bg)',
               padding: '0.12rem 0.4rem',
-              borderRadius: 'var(--radius-full)'
+              borderRadius: '6px'
             }}>
               {trend}
             </span>
