@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useERP } from '../../context/ERPContext';
+import DedicatedQuizPortal from './DedicatedQuizPortal';
 import { 
   BookOpen, 
   HelpCircle, 
@@ -1492,253 +1493,33 @@ export default function AssignmentQuizHub() {
       )}
 
       {/* ========================================================================= */}
-      {/* 4. MODAL: STUDENT INTERACTIVE MCQ QUIZ TAKER                              */}
+      {/* 4. DEDICATED FULL-PAGE PROCTORED EXAM PORTAL                              */}
       {/* ========================================================================= */}
       {quizModalOpen && takingQuiz && (
-        <div 
-          style={{ 
-            position: 'fixed', 
-            top: 0, 
-            left: 0, 
-            right: 0, 
-            bottom: 0, 
-            background: 'rgba(15, 23, 42, 0.65)', 
-            backdropFilter: 'blur(4px)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            zIndex: 1000,
-            padding: '1rem'
+        <DedicatedQuizPortal
+          quiz={takingQuiz}
+          student={currentStudent}
+          onClose={() => {
+            setQuizModalOpen(false);
+            setTakingQuiz(null);
+            setQuizSubmittedResult(null);
           }}
-        >
-          <div 
-            className="glass-panel" 
-            style={{ 
-              width: '100%', 
-              maxWidth: '800px', 
-              maxHeight: '92vh', 
-              overflowY: 'auto', 
-              padding: '2rem 2.25rem', 
-              background: '#ffffff',
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-              border: '1px solid #e2e8f0'
-            }}
-          >
-            {/* Modal Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--border-light)', paddingBottom: '1.25rem', marginBottom: '1.5rem' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.35rem' }}>
-                  <span className="badge badge-primary">Online Computer-Based Assessment</span>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{takingQuiz.subject}</span>
-                </div>
-                <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-primary)' }}>{takingQuiz.title}</h2>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                  Candidate: <strong>{currentStudent.name}</strong> • Class: <strong>{takingQuiz.className}</strong> • Total Marks: <strong>{takingQuiz.totalMarks}</strong>
-                </p>
-              </div>
-              <button 
-                className="btn btn-secondary" 
-                style={{ padding: '0.45rem', borderRadius: '50%' }} 
-                onClick={() => setQuizModalOpen(false)}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* If Quiz is Already Submitted: Show Under Teacher Checking Screen */}
-            {quizSubmittedResult ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
-                <div style={{ 
-                  width: '76px', 
-                  height: '76px', 
-                  borderRadius: '50%', 
-                  background: 'rgba(245, 158, 11, 0.15)', 
-                  display: 'inline-flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  color: '#b45309',
-                  marginBottom: '1.25rem',
-                  boxShadow: '0 4px 12px rgba(245, 158, 11, 0.25)'
-                }}>
-                  <Clock size={40} />
-                </div>
-                <div style={{ marginBottom: '0.75rem' }}>
-                  <span className="badge badge-warning" style={{ fontSize: '0.88rem', padding: '0.4rem 1rem', fontWeight: 700 }}>
-                    Status: Test Submitted — Under Teacher Checking
-                  </span>
-                </div>
-                <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                  Test Successfully Submitted to Teacher!
-                </h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.5rem', maxWidth: '540px', margin: '0.5rem auto 1.75rem auto', lineHeight: 1.6 }}>
-                  Your answers to all <strong>{quizSubmittedResult.totalQuestions} questions</strong> have been saved to the school database. In accordance with exam protocols, <strong>your score, percentage, and answer keys are locked</strong> and will be released as soon as your subject teacher completes their evaluation.
-                </p>
-
-                <div style={{ 
-                  padding: '1rem 1.75rem', 
-                  background: '#f8fafc', 
-                  borderRadius: 'var(--radius-md)', 
-                  display: 'inline-flex', 
-                  alignItems: 'center', 
-                  gap: '0.75rem',
-                  border: '1px solid var(--border-light)',
-                  marginBottom: '2rem'
-                }}>
-                  <CheckCircle2 size={20} color="var(--success)" />
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    Your parents can now see in real-time that you have completed and submitted this test.
-                  </span>
-                </div>
-
-                <div>
-                  <button 
-                    className="btn btn-primary" 
-                    style={{ padding: '0.7rem 1.75rem', fontSize: '0.95rem' }}
-                    onClick={() => {
-                      setQuizModalOpen(false);
-                      setQuizSubmittedResult(null);
-                    }}
-                  >
-                    <span>Return to Coursework Hub</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              /* Quiz Questions Form */
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-                {/* Progress Summary Header */}
-                <div style={{ 
-                  padding: '1rem 1.25rem', 
-                  background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%)', 
-                  borderRadius: '10px', 
-                  border: '1px solid rgba(99, 102, 241, 0.2)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '0.75rem'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                    <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--primary)' }}>
-                      Questions Answered: {Object.keys(studentAnswers).length} / {takingQuiz.questions?.length || 0}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <div style={{ width: '120px', height: '8px', background: '#e2e8f0', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div 
-                        style={{ 
-                          width: `${((Object.keys(studentAnswers).length) / (takingQuiz.questions?.length || 1)) * 100}%`, 
-                          height: '100%', 
-                          background: 'var(--primary)',
-                          transition: 'width 0.3s ease'
-                        }} 
-                      />
-                    </div>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                      {Math.round(((Object.keys(studentAnswers).length) / (takingQuiz.questions?.length || 1)) * 100)}%
-                    </span>
-                  </div>
-                </div>
-
-                {(takingQuiz.questions || []).map((q, qIdx) => (
-                  <div 
-                    key={q.id || qIdx} 
-                    style={{ 
-                      padding: '1.5rem', 
-                      borderRadius: '12px', 
-                      background: '#f8fafc', 
-                      border: studentAnswers[qIdx] !== undefined ? '1.5px solid rgba(99, 102, 241, 0.35)' : '1.5px solid #e2e8f0',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                      <span className="badge badge-primary" style={{ fontSize: '0.82rem', padding: '0.25rem 0.65rem' }}>
-                        Question {qIdx + 1}
-                      </span>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
-                        {q.marks || 5} Marks
-                      </span>
-                    </div>
-
-                    <p style={{ fontSize: '0.98rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', lineHeight: 1.5 }}>
-                      {q.prompt}
-                    </p>
-
-                    {/* Radio Options A, B, C, D */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      {(q.options || []).map((opt, optIdx) => {
-                        const isSelected = studentAnswers[qIdx] === optIdx;
-                        return (
-                          <label 
-                            key={optIdx} 
-                            style={{ 
-                              display: 'flex', 
-                              alignItems: 'center', 
-                              gap: '0.85rem', 
-                              padding: '0.85rem 1.15rem', 
-                              borderRadius: '10px', 
-                              background: isSelected ? 'rgba(99, 102, 241, 0.08)' : '#ffffff', 
-                              border: isSelected ? '2px solid var(--primary)' : '1px solid #cbd5e1',
-                              cursor: 'pointer',
-                              transition: 'all 0.15s ease',
-                              boxShadow: isSelected ? '0 2px 8px rgba(99, 102, 241, 0.15)' : 'none'
-                            }}
-                          >
-                            <input 
-                              type="radio" 
-                              name={`question_${qIdx}`}
-                              checked={isSelected}
-                              onChange={() => setStudentAnswers({ ...studentAnswers, [qIdx]: optIdx })}
-                              style={{ width: '18px', height: '18px', accentColor: 'var(--primary)' }}
-                            />
-                            <span style={{ 
-                              width: '26px', 
-                              height: '26px', 
-                              borderRadius: '50%', 
-                              background: isSelected ? 'var(--primary)' : '#f1f5f9', 
-                              color: isSelected ? '#ffffff' : 'var(--text-secondary)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '0.78rem',
-                              fontWeight: 800,
-                              flexShrink: 0
-                            }}>
-                              {String.fromCharCode(65 + optIdx)}
-                            </span>
-                            <span style={{ fontSize: '0.92rem', color: 'var(--text-primary)', fontWeight: isSelected ? 700 : 500 }}>
-                              {opt}
-                            </span>
-                            {isSelected && (
-                              <CheckCircle2 size={18} color="var(--primary)" style={{ marginLeft: 'auto', flexShrink: 0 }} />
-                            )}
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginTop: '1rem', borderTop: '1px solid var(--border-light)', paddingTop: '1.25rem' }}>
-                  <button className="btn btn-secondary" onClick={() => setQuizModalOpen(false)}>
-                    <span>Cancel</span>
-                  </button>
-                  <button 
-                    className="btn btn-primary" 
-                    style={{ padding: '0.7rem 1.5rem', fontSize: '0.9rem' }}
-                    onClick={handleSubmitQuizAnswers}
-                    disabled={Object.keys(studentAnswers).length === 0}
-                  >
-                    <Check size={16} />
-                    <span>Submit Test to Teacher for Checking ({Object.keys(studentAnswers).length}/{takingQuiz.questions?.length || 0})</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+          onSubmit={(answers, score, proctoringLog) => {
+            submitStudentQuiz(takingQuiz.id, currentStudent.id, answers, score, takingQuiz.totalMarks, proctoringLog);
+            setQuizSubmittedResult({
+              submitted: true,
+              totalQuestions: (takingQuiz.questions || []).length,
+              totalMarks: takingQuiz.totalMarks,
+              proctoringLog
+            });
+          }}
+          submittedResult={quizSubmittedResult}
+          onReturnHub={() => {
+            setQuizModalOpen(false);
+            setQuizSubmittedResult(null);
+            setTakingQuiz(null);
+          }}
+        />
       )}
 
       {/* ========================================================================= */}

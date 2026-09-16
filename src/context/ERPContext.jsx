@@ -421,7 +421,7 @@ export function ERPProvider({ children }) {
     return newAsg;
   };
 
-  const submitStudentQuiz = async (assignmentId, studentId, studentAnswers, calculatedScore, totalMarks) => {
+  const submitStudentQuiz = async (assignmentId, studentId, studentAnswers, calculatedScore, totalMarks, proctoringData = {}) => {
     const target = assignments.find(a => a.id === assignmentId);
     if (!target) return;
     const student = students.find(s => s.id === studentId);
@@ -441,7 +441,12 @@ export function ERPProvider({ children }) {
         totalMarks: totalMarks || target.totalMarks,
         submittedDate: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         studentAnswers,
-        teacherRemarks: 'Submitted by student. Awaiting teacher evaluation and checking.',
+        tabSwitchViolations: proctoringData.violations || 0,
+        proctoringFlag: proctoringData.flag || (proctoringData.violations > 0 ? `${proctoringData.violations} Tab Switches Detected` : 'Integrity Verified'),
+        proctoringNotes: proctoringData.notes || 'Official online proctored exam session.',
+        teacherRemarks: proctoringData.violations >= 3 
+          ? 'Auto-submitted due to excessive tab-switching violations. Scrutiny recommended.' 
+          : 'Submitted by student. Awaiting teacher evaluation and checking.',
         reviewedByTeacher: false
       }
     };
